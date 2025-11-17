@@ -553,6 +553,53 @@ footer {
     margin: 0;
 }
 
+.creator-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.8rem 1.5rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    text-decoration: none;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    margin-top: 0.5rem;
+}
+
+.creator-badge:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+}
+
+.creator-icon {
+    font-size: 1.2rem;
+    animation: sparkle 2s ease-in-out infinite;
+}
+
+@keyframes sparkle {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.2);
+        opacity: 0.8;
+    }
+}
+
+.creator-text {
+    letter-spacing: 0.3px;
+}
+
+.creator-text strong {
+    font-weight: 700;
+    font-size: 1.05rem;
+}
+
 /* Modal Popup */
 .modal-overlay {
     display: none;
@@ -864,5 +911,14 @@ footer {
 
     .footer-copyright {
         font-size: 0.85rem;
+    }
+
+    .creator-badge {
+        font-size: 0.9rem;
+        padding: 0.7rem 1.2rem;
+    }
+
+    .creator-icon {
+        font-size: 1.1rem;
     }
 }
