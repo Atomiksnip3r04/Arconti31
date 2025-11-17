@@ -17,16 +17,19 @@
     </header>
 
     <main class="container">
-        <div id="filters" class="filters">
-            <button class="filter-btn active" data-filter="all">Tutte</button>
-            <button class="filter-btn" data-filter="chiara">Chiare</button>
-            <button class="filter-btn" data-filter="scura">Scure</button>
-            <button class="filter-btn" data-filter="rossa">Rosse</button>
-            <button class="filter-btn" data-filter="artigianale">Artigianali</button>
+        <!-- Breadcrumb navigation -->
+        <div id="breadcrumb" class="breadcrumb" style="display: none;">
+            <button class="breadcrumb-btn" onclick="goHome()">← Torna al Menù</button>
         </div>
 
-        <div id="content">
+        <!-- Categories view (home) -->
+        <div id="categories-view" class="categories-view">
             <div class="loading">Caricamento...</div>
+        </div>
+
+        <!-- Detail view (single category) -->
+        <div id="detail-view" class="detail-view" style="display: none;">
+            <div id="detail-content"></div>
         </div>
     </main>
 

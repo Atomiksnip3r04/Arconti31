@@ -1,5 +1,6 @@
-let allItems = [];
-let currentFilter = 'all';
+let beersData = null;
+let beveragesData = null;
+let currentView = 'home';
 
 // Carica tutte le bevande
 async function loadAllBeverages() {
@@ -9,64 +10,112 @@ async function loadAllBeverages() {
             fetch('beverages/beverages.json').catch(() => ({ json: async () => ({ beverages: [], beveragesByType: {} }) }))
         ]);
         
-        const beersData = await beersResponse.json();
-        const beveragesData = await beveragesResponse.json();
+        beersData = await beersResponse.json();
+        beveragesData = await beveragesResponse.json();
         
-        allItems = [...(beersData.beers || []), ...(beveragesData.beverages || [])];
-        
-        displayContent(beersData, beveragesData);
-        setupFilters();
+        showCategoriesView();
     } catch (error) {
         console.error('Errore nel caricamento:', error);
-        document.getElementById('content').innerHTML = 
+        document.getElementById('categories-view').innerHTML = 
             '<p class="loading">Errore nel caricamento. Riprova più tardi.</p>';
     }
 }
 
-function displayContent(beersData, beveragesData) {
-    const content = document.getElementById('content');
+function showCategoriesView() {
+    currentView = 'home';
+    document.getElementById('breadcrumb').style.display = 'none';
+    document.getElementById('categories-view').style.display = 'block';
+    document.getElementById('detail-view').style.display = 'none';
+    
+    const categoriesView = document.getElementById('categories-view');
     let html = '';
     
-    // Mostra sezioni birre
-    if (beersData.beersBySection) {
+    // Sezioni birre
+    if (beersData && beersData.beersBySection) {
         const sectionOrder = [
-            'Birre artigianali alla spina a rotazione',
-            'Birre alla spina',
-            'Birre speciali in bottiglia',
-            'Frigo Birre'
+            { name: 'Birre artigianali alla spina a rotazione', icon: '🍺' },
+            { name: 'Birre alla spina', icon: '🍻' },
+            { name: 'Birre speciali in bottiglia', icon: '🍾' },
+            { name: 'Frigo Birre', icon: '❄️' }
         ];
         
-        sectionOrder.forEach(sectionName => {
-            const items = beersData.beersBySection[sectionName];
+        sectionOrder.forEach(section => {
+            const items = beersData.beersBySection[section.name];
             if (items && items.length > 0) {
-                html += `
-                    <h2 class="section-title">${sectionName}</h2>
-                    <div class="beer-grid">
-                        ${items.map((item, index) => renderCard(item, index, 'beer')).join('')}
-                    </div>
-                `;
+                html += createCategoryCard(section.name, items.length, section.icon, 'beer');
             }
         });
     }
     
-    // Mostra altre bevande
-    if (beveragesData.beveragesByType) {
-        const typeOrder = ['Cocktails', 'Analcolici', 'Bibite', 'Caffetteria', 'Bollicine', 'Bianchi fermi', 'Vini rossi'];
+    // Categorie bevande
+    if (beveragesData && beveragesData.beveragesByType) {
+        const typeOrder = [
+            { name: 'Cocktails', icon: '🍹' },
+            { name: 'Analcolici', icon: '🥤' },
+            { name: 'Bibite', icon: '🥫' },
+            { name: 'Caffetteria', icon: '☕' },
+            { name: 'Bollicine', icon: '🥂' },
+            { name: 'Bianchi fermi', icon: '🍷' },
+            { name: 'Vini rossi', icon: '🍷' }
+        ];
         
-        typeOrder.forEach(typeName => {
-            const items = beveragesData.beveragesByType[typeName];
+        typeOrder.forEach(type => {
+            const items = beveragesData.beveragesByType[type.name];
             if (items && items.length > 0) {
-                html += `
-                    <h2 class="section-title">${typeName}</h2>
-                    <div class="beer-grid">
-                        ${items.map((item, index) => renderCard(item, index + 1000, 'beverage')).join('')}
-                    </div>
-                `;
+                html += createCategoryCard(type.name, items.length, type.icon, 'beverage');
             }
         });
     }
     
-    content.innerHTML = html || '<p class="loading">Nessun contenuto disponibile.</p>';
+    categoriesView.innerHTML = html || '<p class="loading">Nessuna categoria disponibile.</p>';
+}
+
+function createCategoryCard(name, count, icon, type) {
+    return `
+        <div class="category-card" onclick="showCategory('${name}', '${type}')">
+            <div class="category-header">
+                <div class="category-title">
+                    <span class="category-icon">${icon}</span>
+                    <span>${name}</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <span class="category-count">${count} ${count === 1 ? 'prodotto' : 'prodotti'}</span>
+                    <span class="category-arrow">→</span>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+function showCategory(categoryName, type) {
+    currentView = 'detail';
+    document.getElementById('breadcrumb').style.display = 'block';
+    document.getElementById('categories-view').style.display = 'none';
+    document.getElementById('detail-view').style.display = 'block';
+    
+    const detailContent = document.getElementById('detail-content');
+    let items = [];
+    
+    if (type === 'beer' && beersData && beersData.beersBySection) {
+        items = beersData.beersBySection[categoryName] || [];
+    } else if (type === 'beverage' && beveragesData && beveragesData.beveragesByType) {
+        items = beveragesData.beveragesByType[categoryName] || [];
+    }
+    
+    let html = `
+        <h2 class="section-title">${categoryName}</h2>
+        <div class="beer-grid">
+            ${items.map((item, index) => renderCard(item, index, type)).join('')}
+        </div>
+    `;
+    
+    detailContent.innerHTML = html;
+    window.scrollTo(0, 0);
+}
+
+function goHome() {
+    showCategoriesView();
+    window.scrollTo(0, 0);
 }
 
 function renderCard(item, index, type) {
@@ -103,7 +152,7 @@ function renderCard(item, index, type) {
     const categoryLabel = type === 'beer' ? item.categoria : item.tipo;
     
     return `
-        <div class="beer-card ${cardClass}" data-category="${item.categoria || ''}" data-type="${type}" data-index="${index}" style="animation-delay: ${(index % 10) * 0.1}s" onclick="openModal(${index}, '${type}')">
+        <div class="beer-card ${cardClass}" data-category="${item.categoria || ''}" data-type="${type}" style="animation-delay: ${(index % 10) * 0.1}s" onclick="openModal(${index}, '${type}', '${item.nome.replace(/'/g, "\\'")}')">
             ${imageHtml}
             <div class="beer-content">
                 <div class="beer-header">
@@ -124,37 +173,21 @@ function renderCard(item, index, type) {
     `;
 }
 
-function setupFilters() {
-    const filterButtons = document.querySelectorAll('.filter-btn');
+function openModal(index, type, itemName) {
+    let items = [];
     
-    filterButtons.forEach(btn => {
-        btn.addEventListener('click', () => {
-            filterButtons.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            
-            const filter = btn.dataset.filter;
-            currentFilter = filter;
-            const cards = document.querySelectorAll('.beer-card');
-            
-            cards.forEach(card => {
-                const category = card.dataset.category?.toLowerCase() || '';
-                if (filter === 'all' || category === filter) {
-                    card.classList.remove('hidden');
-                } else {
-                    card.classList.add('hidden');
-                }
-            });
+    // Trova gli items della categoria corrente
+    if (type === 'beer' && beersData && beersData.beersBySection) {
+        Object.values(beersData.beersBySection).forEach(sectionItems => {
+            items = items.concat(sectionItems);
         });
-    });
-}
-
-function openModal(index, type) {
-    const item = allItems.find((it, idx) => {
-        if (type === 'beer' && idx < 1000) return idx === index;
-        if (type === 'beverage' && idx >= 1000) return idx === index;
-        return false;
-    }) || allItems[index];
+    } else if (type === 'beverage' && beveragesData && beveragesData.beveragesByType) {
+        Object.values(beveragesData.beveragesByType).forEach(typeItems => {
+            items = items.concat(typeItems);
+        });
+    }
     
+    const item = items[index];
     if (!item) return;
     
     const modal = document.getElementById('beer-modal');
@@ -253,7 +286,11 @@ document.getElementById('beer-modal').addEventListener('click', (e) => {
 
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
-        closeModal();
+        if (document.getElementById('beer-modal').classList.contains('active')) {
+            closeModal();
+        } else if (currentView === 'detail') {
+            goHome();
+        }
     }
 });
 
