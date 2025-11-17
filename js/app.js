@@ -1,126 +1,81 @@
-let allBeers = [];
+let allItems = [];
+let currentFilter = 'all';
 
-// Carica e mostra le birre
-async function loadBeers() {
+// Carica tutte le bevande
+async function loadAllBeverages() {
     try {
-        const response = await fetch('beers/beers.json');
-        const data = await response.json();
-        allBeers = data.beers;
-        displayBeers(allBeers);
-        setupFilters(allBeers);
+        const [beersResponse, beveragesResponse] = await Promise.all([
+            fetch('beers/beers.json'),
+            fetch('beverages/beverages.json').catch(() => ({ json: async () => ({ beverages: [], beveragesByType: {} }) }))
+        ]);
+        
+        const beersData = await beersResponse.json();
+        const beveragesData = await beveragesResponse.json();
+        
+        allItems = [...(beersData.beers || []), ...(beveragesData.beverages || [])];
+        
+        displayContent(beersData, beveragesData);
+        setupFilters();
     } catch (error) {
         console.error('Errore nel caricamento:', error);
-        document.getElementById('beer-grid').innerHTML = 
-            '<p class="loading">Errore nel caricamento delle birre. Riprova più tardi.</p>';
+        document.getElementById('content').innerHTML = 
+            '<p class="loading">Errore nel caricamento. Riprova più tardi.</p>';
     }
 }
 
-function displayBeers(beers) {
-    const grid = document.getElementById('beer-grid');
+function displayContent(beersData, beveragesData) {
+    const content = document.getElementById('content');
+    let html = '';
     
-    if (!beers || beers.length === 0) {
-        grid.innerHTML = '<p class="loading">Nessuna birra disponibile al momento.</p>';
-        return;
-    }
-
-    grid.innerHTML = beers.map((beer, index) => {
-        // Gestisci tags come array o stringa
-        let tags = [];
-        if (beer.tags) {
-            if (Array.isArray(beer.tags)) {
-                tags = beer.tags.filter(t => t && t !== 'Nessuno');
-            } else if (typeof beer.tags === 'string') {
-                tags = [beer.tags].filter(t => t && t !== 'Nessuno');
-            }
-        }
+    // Mostra sezioni birre
+    if (beersData.beersBySection) {
+        const sectionOrder = [
+            'Birre artigianali alla spina a rotazione',
+            'Birre alla spina',
+            'Birre speciali in bottiglia',
+            'Frigo Birre'
+        ];
         
-        const tagsHtml = tags.length > 0
-            ? `<div class="beer-tags">
-                ${tags.map(tag => {
-                    const tagClass = tag.toLowerCase().replace(/\s+/g, '-');
-                    return `<span class="beer-tag ${tagClass}">${tag}</span>`;
-                }).join('')}
-               </div>`
-            : '';
-        
-        // Determina se mostrare immagine grande o solo logo
-        const hasFullImage = beer.immagine && !beer.logo;
-        const hasLogo = beer.logo;
-        const cardClass = hasLogo && !hasFullImage ? 'logo-only' : '';
-        
-        const imageHtml = hasFullImage 
-            ? `<img 
-                src="${beer.immagine}" 
-                alt="${beer.nome}"
-                class="beer-image"
-                loading="lazy"
-            >`
-            : '';
-        
-        const logoHtml = hasLogo 
-            ? `<img src="${beer.logo}" alt="${beer.nome}" class="beer-logo">`
-            : '';
-        
-        return `
-        <div class="beer-card ${cardClass}" data-category="${beer.categoria}" data-index="${index}" style="animation-delay: ${index * 0.1}s" onclick="openModal(${index})">
-            ${imageHtml}
-            <div class="beer-content">
-                <div class="beer-header">
-                    <div class="beer-name-wrapper">
-                        ${logoHtml}
-                        <h2 class="beer-name">${beer.nome}</h2>
+        sectionOrder.forEach(sectionName => {
+            const items = beersData.beersBySection[sectionName];
+            if (items && items.length > 0) {
+                html += `
+                    <h2 class="section-title">${sectionName}</h2>
+                    <div class="beer-grid">
+                        ${items.map((item, index) => renderCard(item, index, 'beer')).join('')}
                     </div>
-                    <span class="beer-price">€${beer.prezzo}</span>
-                </div>
-                <span class="beer-category">${beer.categoria}</span>
-                ${tagsHtml}
-                <p class="beer-description">${beer.descrizione}</p>
-                <div class="availability ${beer.disponibile ? 'available' : 'unavailable'}">
-                    ${beer.disponibile ? 'Disponibile' : 'Non disponibile'}
-                </div>
-            </div>
-        </div>
-        `;
-    }).join('');
-}
-
-function setupFilters(beers) {
-    const filterButtons = document.querySelectorAll('.filter-btn');
-    
-    filterButtons.forEach(btn => {
-        btn.addEventListener('click', () => {
-            // Rimuovi active da tutti
-            filterButtons.forEach(b => b.classList.remove('active'));
-            // Aggiungi active al bottone cliccato
-            btn.classList.add('active');
-            
-            const filter = btn.dataset.filter;
-            const cards = document.querySelectorAll('.beer-card');
-            
-            cards.forEach(card => {
-                if (filter === 'all' || card.dataset.category.toLowerCase() === filter) {
-                    card.classList.remove('hidden');
-                } else {
-                    card.classList.add('hidden');
-                }
-            });
+                `;
+            }
         });
-    });
+    }
+    
+    // Mostra altre bevande
+    if (beveragesData.beveragesByType) {
+        const typeOrder = ['Cocktails', 'Analcolici', 'Bibite', 'Caffetteria', 'Bollicine', 'Bianchi fermi', 'Vini rossi'];
+        
+        typeOrder.forEach(typeName => {
+            const items = beveragesData.beveragesByType[typeName];
+            if (items && items.length > 0) {
+                html += `
+                    <h2 class="section-title">${typeName}</h2>
+                    <div class="beer-grid">
+                        ${items.map((item, index) => renderCard(item, index + 1000, 'beverage')).join('')}
+                    </div>
+                `;
+            }
+        });
+    }
+    
+    content.innerHTML = html || '<p class="loading">Nessun contenuto disponibile.</p>';
 }
 
-// Modal functions
-function openModal(index) {
-    const beer = allBeers[index];
-    const modal = document.getElementById('beer-modal');
-    const modalBody = document.getElementById('modal-body');
-    
-    // Gestisci tags come array o stringa
+function renderCard(item, index, type) {
     let tags = [];
-    if (beer.tags) {
-        if (Array.isArray(beer.tags)) {
-            tags = beer.tags.filter(t => t && t !== 'Nessuno');
-        } else if (typeof beer.tags === 'string') {
-            tags = [beer.tags].filter(t => t && t !== 'Nessuno');
+    if (item.tags) {
+        if (Array.isArray(item.tags)) {
+            tags = item.tags.filter(t => t && t !== 'Nessuno');
+        } else if (typeof item.tags === 'string') {
+            tags = [item.tags].filter(t => t && t !== 'Nessuno');
         }
     }
     
@@ -133,13 +88,102 @@ function openModal(index) {
            </div>`
         : '';
     
-    // Gestisci allergeni come array o stringa
+    const hasFullImage = item.immagine && !item.logo;
+    const hasLogo = item.logo;
+    const cardClass = hasLogo && !hasFullImage ? 'logo-only' : '';
+    
+    const imageHtml = hasFullImage 
+        ? `<img src="${item.immagine}" alt="${item.nome}" class="beer-image" loading="lazy">`
+        : '';
+    
+    const logoHtml = hasLogo 
+        ? `<img src="${item.logo}" alt="${item.nome}" class="beer-logo">`
+        : '';
+    
+    const categoryLabel = type === 'beer' ? item.categoria : item.tipo;
+    
+    return `
+        <div class="beer-card ${cardClass}" data-category="${item.categoria || ''}" data-type="${type}" data-index="${index}" style="animation-delay: ${(index % 10) * 0.1}s" onclick="openModal(${index}, '${type}')">
+            ${imageHtml}
+            <div class="beer-content">
+                <div class="beer-header">
+                    <div class="beer-name-wrapper">
+                        ${logoHtml}
+                        <h2 class="beer-name">${item.nome}</h2>
+                    </div>
+                    <span class="beer-price">€${item.prezzo}</span>
+                </div>
+                ${categoryLabel ? `<span class="beer-category">${categoryLabel}</span>` : ''}
+                ${tagsHtml}
+                <p class="beer-description">${item.descrizione}</p>
+                <div class="availability ${item.disponibile ? 'available' : 'unavailable'}">
+                    ${item.disponibile ? 'Disponibile' : 'Non disponibile'}
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+function setupFilters() {
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    
+    filterButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            filterButtons.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            
+            const filter = btn.dataset.filter;
+            currentFilter = filter;
+            const cards = document.querySelectorAll('.beer-card');
+            
+            cards.forEach(card => {
+                const category = card.dataset.category?.toLowerCase() || '';
+                if (filter === 'all' || category === filter) {
+                    card.classList.remove('hidden');
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+        });
+    });
+}
+
+function openModal(index, type) {
+    const item = allItems.find((it, idx) => {
+        if (type === 'beer' && idx < 1000) return idx === index;
+        if (type === 'beverage' && idx >= 1000) return idx === index;
+        return false;
+    }) || allItems[index];
+    
+    if (!item) return;
+    
+    const modal = document.getElementById('beer-modal');
+    const modalBody = document.getElementById('modal-body');
+    
+    let tags = [];
+    if (item.tags) {
+        if (Array.isArray(item.tags)) {
+            tags = item.tags.filter(t => t && t !== 'Nessuno');
+        } else if (typeof item.tags === 'string') {
+            tags = [item.tags].filter(t => t && t !== 'Nessuno');
+        }
+    }
+    
+    const tagsHtml = tags.length > 0
+        ? `<div class="beer-tags">
+            ${tags.map(tag => {
+                const tagClass = tag.toLowerCase().replace(/\s+/g, '-');
+                return `<span class="beer-tag ${tagClass}">${tag}</span>`;
+            }).join('')}
+           </div>`
+        : '';
+    
     let allergeni = [];
-    if (beer.allergeni) {
-        if (Array.isArray(beer.allergeni)) {
-            allergeni = beer.allergeni.filter(a => a);
-        } else if (typeof beer.allergeni === 'string') {
-            allergeni = [beer.allergeni].filter(a => a);
+    if (item.allergeni) {
+        if (Array.isArray(item.allergeni)) {
+            allergeni = item.allergeni.filter(a => a);
+        } else if (typeof item.allergeni === 'string') {
+            allergeni = [item.allergeni].filter(a => a);
         }
     }
     
@@ -155,40 +199,38 @@ function openModal(index) {
         : '';
     
     const metaItems = [];
-    if (beer.gradazione) {
-        metaItems.push(`<div class="modal-meta-item"><strong>Gradazione:</strong> ${beer.gradazione}</div>`);
+    if (item.gradazione) {
+        metaItems.push(`<div class="modal-meta-item"><strong>Gradazione:</strong> ${item.gradazione}</div>`);
     }
-    if (beer.formato) {
-        metaItems.push(`<div class="modal-meta-item"><strong>Formato:</strong> ${beer.formato}</div>`);
+    if (item.formato) {
+        metaItems.push(`<div class="modal-meta-item"><strong>Formato:</strong> ${item.formato}</div>`);
     }
     
     const metaHtml = metaItems.length > 0 
         ? `<div class="modal-meta">${metaItems.join('')}</div>`
         : '';
     
-    const descrizioneCompleta = beer.descrizione_dettagliata || beer.descrizione;
-    
-    const logoHtml = beer.logo 
-        ? `<img src="${beer.logo}" alt="${beer.nome}" class="modal-logo">`
-        : '';
+    const descrizioneCompleta = item.descrizione_dettagliata || item.descrizione;
+    const logoHtml = item.logo ? `<img src="${item.logo}" alt="${item.nome}" class="modal-logo">` : '';
+    const categoryLabel = item.categoria || item.tipo || '';
     
     modalBody.innerHTML = `
-        ${beer.immagine ? `<img src="${beer.immagine}" alt="${beer.nome}" class="modal-image">` : ''}
+        ${item.immagine ? `<img src="${item.immagine}" alt="${item.nome}" class="modal-image">` : ''}
         <div class="modal-body">
             <div class="modal-header">
                 <div class="modal-title-wrapper">
                     ${logoHtml}
-                    <h2 class="modal-title">${beer.nome}</h2>
+                    <h2 class="modal-title">${item.nome}</h2>
                 </div>
-                <span class="modal-price">€${beer.prezzo}</span>
+                <span class="modal-price">€${item.prezzo}</span>
             </div>
-            <span class="beer-category">${beer.categoria}</span>
+            ${categoryLabel ? `<span class="beer-category">${categoryLabel}</span>` : ''}
             ${tagsHtml}
             ${metaHtml}
             <div class="modal-description">${descrizioneCompleta}</div>
             ${allergeniHtml}
-            <div class="availability ${beer.disponibile ? 'available' : 'unavailable'}">
-                ${beer.disponibile ? '✓ Disponibile' : '✗ Non disponibile'}
+            <div class="availability ${item.disponibile ? 'available' : 'unavailable'}">
+                ${item.disponibile ? '✓ Disponibile' : '✗ Non disponibile'}
             </div>
         </div>
     `;
@@ -203,19 +245,16 @@ function closeModal() {
     document.body.style.overflow = '';
 }
 
-// Chiudi modal cliccando fuori
 document.getElementById('beer-modal').addEventListener('click', (e) => {
     if (e.target.id === 'beer-modal') {
         closeModal();
     }
 });
 
-// Chiudi modal con ESC
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
         closeModal();
     }
 });
 
-// Carica le birre all'avvio
-document.addEventListener('DOMContentLoaded', loadBeers);
+document.addEventListener('DOMContentLoaded', loadAllBeverages);

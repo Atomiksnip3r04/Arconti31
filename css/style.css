@@ -71,6 +71,23 @@ header h1 {
     transform: translateY(-2px);
 }
 
+.section-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--secondary);
+    margin: 3rem 0 1.5rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 3px solid var(--primary);
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.section-title::before {
+    content: '📋';
+    font-size: 1.5rem;
+}
+
 .beer-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
