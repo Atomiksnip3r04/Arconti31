@@ -33,17 +33,33 @@ function displayBeers(beers) {
                </div>`
             : '';
         
-        return `
-        <div class="beer-card" data-category="${beer.categoria}" data-index="${index}" style="animation-delay: ${index * 0.1}s" onclick="openModal(${index})">
-            <img 
-                src="${beer.immagine || 'https://via.placeholder.com/400x300?text=Birra'}" 
+        // Determina se mostrare immagine grande o solo logo
+        const hasFullImage = beer.immagine && !beer.logo;
+        const hasLogo = beer.logo;
+        const cardClass = hasLogo && !hasFullImage ? 'logo-only' : '';
+        
+        const imageHtml = hasFullImage 
+            ? `<img 
+                src="${beer.immagine}" 
                 alt="${beer.nome}"
                 class="beer-image"
                 loading="lazy"
-            >
+            >`
+            : '';
+        
+        const logoHtml = hasLogo 
+            ? `<img src="${beer.logo}" alt="${beer.nome}" class="beer-logo">`
+            : '';
+        
+        return `
+        <div class="beer-card ${cardClass}" data-category="${beer.categoria}" data-index="${index}" style="animation-delay: ${index * 0.1}s" onclick="openModal(${index})">
+            ${imageHtml}
             <div class="beer-content">
                 <div class="beer-header">
-                    <h2 class="beer-name">${beer.nome}</h2>
+                    <div class="beer-name-wrapper">
+                        ${logoHtml}
+                        <h2 class="beer-name">${beer.nome}</h2>
+                    </div>
                     <span class="beer-price">€${beer.prezzo}</span>
                 </div>
                 <span class="beer-category">${beer.categoria}</span>
@@ -122,11 +138,18 @@ function openModal(index) {
     
     const descrizioneCompleta = beer.descrizione_dettagliata || beer.descrizione;
     
+    const logoHtml = beer.logo 
+        ? `<img src="${beer.logo}" alt="${beer.nome}" class="modal-logo">`
+        : '';
+    
     modalBody.innerHTML = `
         ${beer.immagine ? `<img src="${beer.immagine}" alt="${beer.nome}" class="modal-image">` : ''}
         <div class="modal-body">
             <div class="modal-header">
-                <h2 class="modal-title">${beer.nome}</h2>
+                <div class="modal-title-wrapper">
+                    ${logoHtml}
+                    <h2 class="modal-title">${beer.nome}</h2>
+                </div>
                 <span class="modal-price">€${beer.prezzo}</span>
             </div>
             <span class="beer-category">${beer.categoria}</span>

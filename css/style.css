@@ -89,6 +89,14 @@ header h1 {
     cursor: pointer;
 }
 
+.beer-card.logo-only {
+    overflow: visible;
+}
+
+.beer-card.logo-only .beer-image {
+    display: none;
+}
+
 @keyframes fadeIn {
     to {
         opacity: 1;
@@ -120,6 +128,21 @@ header h1 {
     justify-content: space-between;
     align-items: start;
     margin-bottom: 0.5rem;
+    gap: 1rem;
+}
+
+.beer-name-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    flex: 1;
+}
+
+.beer-logo {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+    flex-shrink: 0;
 }
 
 .beer-name {
@@ -305,6 +328,21 @@ footer {
     justify-content: space-between;
     align-items: start;
     margin-bottom: 1rem;
+    gap: 1rem;
+}
+
+.modal-title-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex: 1;
+}
+
+.modal-logo {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+    flex-shrink: 0;
 }
 
 .modal-title {
@@ -413,5 +451,15 @@ footer {
 
     .modal-image {
         height: 200px;
+    }
+
+    .beer-logo {
+        width: 40px;
+        height: 40px;
+    }
+
+    .modal-logo {
+        width: 50px;
+        height: 50px;
     }
 }
