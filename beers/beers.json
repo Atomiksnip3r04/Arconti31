@@ -1,0 +1,31 @@
+{
+  "beers": [
+    {
+      "nome": "Birra Moretti",
+      "immagine": "/images/beers/moretti.jpg",
+      "descrizione": "Lager italiana dal gusto equilibrato e rinfrescante, perfetta per accompagnare ogni pasto",
+      "prezzo": "4.50",
+      "categoria": "Chiara",
+      "disponibile": true,
+      "order": 1
+    },
+    {
+      "nome": "Guinness Draught",
+      "immagine": "/images/beers/guinness.jpg",
+      "descrizione": "Stout irlandese cremosa con note di caffè e cioccolato, un classico intramontabile",
+      "prezzo": "6.00",
+      "categoria": "Scura",
+      "disponibile": true,
+      "order": 2
+    },
+    {
+      "nome": "Weihenstephaner Weiss",
+      "immagine": "/images/beers/weiss.jpg",
+      "descrizione": "Birra di frumento bavarese con sentori di banana e chiodi di garofano",
+      "prezzo": "5.50",
+      "categoria": "Weiss",
+      "disponibile": true,
+      "order": 3
+    }
+  ]
+}

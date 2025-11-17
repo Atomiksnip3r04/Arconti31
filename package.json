@@ -1,0 +1,12 @@
+{
+  "name": "menu-birre-cms",
+  "version": "1.0.0",
+  "description": "Menù birre con Netlify CMS",
+  "scripts": {
+    "build": "node scripts/generate-json.js",
+    "dev": "python -m http.server 8000"
+  },
+  "keywords": ["netlify-cms", "restaurant", "beer-menu"],
+  "author": "",
+  "license": "MIT"
+}

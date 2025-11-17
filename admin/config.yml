@@ -1,0 +1,23 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: "images/beers"
+public_folder: "/images/beers"
+
+collections:
+  - name: "beers"
+    label: "Birre"
+    folder: "beers"
+    create: true
+    slug: "{{slug}}"
+    editor:
+      preview: false
+    fields:
+      - {label: "Nome Birra", name: "nome", widget: "string"}
+      - {label: "Immagine", name: "immagine", widget: "image", required: false}
+      - {label: "Descrizione", name: "descrizione", widget: "text"}
+      - {label: "Prezzo (€)", name: "prezzo", widget: "number", value_type: "float", min: 0, step: 0.5}
+      - {label: "Categoria", name: "categoria", widget: "select", options: ["Chiara", "Scura", "Rossa", "Artigianale", "IPA", "Lager", "Weiss"]}
+      - {label: "Disponibile", name: "disponibile", widget: "boolean", default: true}
+      - {label: "Ordine", name: "order", widget: "number", default: 0, value_type: "int"}
