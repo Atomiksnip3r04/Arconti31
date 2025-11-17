@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const yaml = require('js-yaml');
 
 // Leggi tutti i file markdown nella cartella beers
 const beersDir = path.join(__dirname, '../beers');
@@ -9,28 +10,32 @@ if (fs.existsSync(beersDir)) {
   const files = fs.readdirSync(beersDir).filter(f => f.endsWith('.md'));
   
   files.forEach(file => {
-    const content = fs.readFileSync(path.join(beersDir, file), 'utf8');
-    
-    // Estrai i dati dal frontmatter
-    const match = content.match(/---\n([\s\S]*?)\n---/);
-    if (match) {
-      const frontmatter = match[1];
-      const beer = {};
+    try {
+      const content = fs.readFileSync(path.join(beersDir, file), 'utf8');
       
-      frontmatter.split('\n').forEach(line => {
-        const [key, ...valueParts] = line.split(':');
-        if (key && valueParts.length) {
-          const value = valueParts.join(':').trim();
-          beer[key.trim()] = value.replace(/^["']|["']$/g, '');
+      // Estrai i dati dal frontmatter usando yaml
+      const match = content.match(/---\n([\s\S]*?)\n---/);
+      if (match) {
+        const frontmatter = match[1];
+        const beer = yaml.load(frontmatter);
+        
+        // Converti i tipi
+        if (beer.prezzo) beer.prezzo = parseFloat(beer.prezzo);
+        if (beer.disponibile !== undefined) beer.disponibile = beer.disponibile === true || beer.disponibile === 'true';
+        if (beer.order) beer.order = parseInt(beer.order);
+        
+        // Assicurati che tags e allergeni siano array
+        if (beer.tags && !Array.isArray(beer.tags)) {
+          beer.tags = [beer.tags];
         }
-      });
-      
-      // Converti i tipi
-      if (beer.prezzo) beer.prezzo = parseFloat(beer.prezzo);
-      if (beer.disponibile) beer.disponibile = beer.disponibile === 'true';
-      if (beer.order) beer.order = parseInt(beer.order);
-      
-      beers.push(beer);
+        if (beer.allergeni && !Array.isArray(beer.allergeni)) {
+          beer.allergeni = [beer.allergeni];
+        }
+        
+        beers.push(beer);
+      }
+    } catch (error) {
+      console.error(`Errore nel processare ${file}:`, error.message);
     }
   });
 }

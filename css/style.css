@@ -498,11 +498,15 @@ footer {
 /* Desktop enhancements */
 @media (min-width: 769px) {
     .beer-card.logo-only {
-        min-height: 280px;
+        min-height: auto;
     }
     
     .beer-card.logo-only .beer-content {
         gap: 0.5rem;
+    }
+    
+    .beer-grid {
+        align-items: start;
     }
 }
 
