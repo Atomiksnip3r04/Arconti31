@@ -80,21 +80,54 @@ header h1 {
 
 .beer-card {
     background: var(--card-bg);
-    border-radius: 12px;
+    border-radius: 16px;
     overflow: hidden;
-    box-shadow: var(--shadow);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     opacity: 0;
     animation: fadeIn 0.5s ease forwards;
     cursor: pointer;
+    border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .beer-card.logo-only {
     overflow: visible;
+    display: flex;
+    flex-direction: column;
+    min-height: auto;
 }
 
 .beer-card.logo-only .beer-image {
     display: none;
+}
+
+.beer-card.logo-only .beer-content {
+    padding: 1.8rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.beer-card.logo-only .beer-logo {
+    width: 70px;
+    height: 70px;
+    border-radius: 8px;
+    padding: 8px;
+    background: linear-gradient(135deg, #f9fafb 0%, #ffffff 100%);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.beer-card.logo-only .beer-header {
+    margin-bottom: 1rem;
+}
+
+.beer-card.logo-only .beer-name {
+    font-size: 1.4rem;
+}
+
+.beer-card.logo-only .beer-description {
+    flex: 1;
+    min-height: 60px;
 }
 
 @keyframes fadeIn {
@@ -104,8 +137,9 @@ header h1 {
 }
 
 .beer-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    transform: translateY(-8px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+    border-color: var(--primary);
 }
 
 .beer-card.hidden {
@@ -143,6 +177,10 @@ header h1 {
     height: 50px;
     object-fit: contain;
     flex-shrink: 0;
+    border-radius: 6px;
+    padding: 4px;
+    background: linear-gradient(135deg, #f9fafb 0%, #ffffff 100%);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
 }
 
 .beer-name {
@@ -153,22 +191,27 @@ header h1 {
 }
 
 .beer-price {
-    font-size: 1.4rem;
-    font-weight: 700;
-    color: var(--primary);
+    font-size: 1.5rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--primary) 0%, #ea580c 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
     white-space: nowrap;
     margin-left: 10px;
 }
 
 .beer-category {
     display: inline-block;
-    padding: 0.3rem 0.8rem;
-    background: var(--primary);
+    padding: 0.35rem 0.9rem;
+    background: linear-gradient(135deg, var(--primary) 0%, #ea580c 100%);
     color: white;
-    border-radius: 15px;
+    border-radius: 20px;
     font-size: 0.8rem;
     font-weight: 600;
     margin-bottom: 0.8rem;
+    box-shadow: 0 2px 6px rgba(245, 158, 11, 0.3);
+    letter-spacing: 0.3px;
 }
 
 .beer-tags {
@@ -229,19 +272,26 @@ header h1 {
 }
 
 .availability {
-    display: flex;
+    display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     font-weight: 600;
+    padding: 0.4rem 0.8rem;
+    border-radius: 12px;
+    margin-top: auto;
 }
 
 .availability.available {
-    color: #10b981;
+    color: #059669;
+    background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+    border: 1px solid #6ee7b7;
 }
 
 .availability.unavailable {
-    color: #ef4444;
+    color: #dc2626;
+    background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+    border: 1px solid #fca5a5;
 }
 
 .availability::before {
@@ -250,6 +300,7 @@ header h1 {
     height: 8px;
     border-radius: 50%;
     background: currentColor;
+    box-shadow: 0 0 4px currentColor;
 }
 
 .loading {
@@ -444,6 +495,17 @@ footer {
     font-size: 1rem;
 }
 
+/* Desktop enhancements */
+@media (min-width: 769px) {
+    .beer-card.logo-only {
+        min-height: 280px;
+    }
+    
+    .beer-card.logo-only .beer-content {
+        gap: 0.5rem;
+    }
+}
+
 @media (max-width: 768px) {
     header h1 {
         font-size: 2rem;
@@ -491,5 +553,15 @@ footer {
     .modal-logo {
         width: 50px;
         height: 50px;
+    }
+    
+    /* Mobile: reset logo-only styles */
+    .beer-card.logo-only .beer-logo {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .beer-card.logo-only .beer-content {
+        padding: 1.5rem;
     }
 }
