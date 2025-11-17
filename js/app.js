@@ -24,9 +24,19 @@ function displayBeers(beers) {
     }
 
     grid.innerHTML = beers.map((beer, index) => {
-        const tagsHtml = beer.tags && beer.tags.length > 0 && beer.tags[0] !== 'Nessuno'
+        // Gestisci tags come array o stringa
+        let tags = [];
+        if (beer.tags) {
+            if (Array.isArray(beer.tags)) {
+                tags = beer.tags.filter(t => t && t !== 'Nessuno');
+            } else if (typeof beer.tags === 'string') {
+                tags = [beer.tags].filter(t => t && t !== 'Nessuno');
+            }
+        }
+        
+        const tagsHtml = tags.length > 0
             ? `<div class="beer-tags">
-                ${beer.tags.map(tag => {
+                ${tags.map(tag => {
                     const tagClass = tag.toLowerCase().replace(/\s+/g, '-');
                     return `<span class="beer-tag ${tagClass}">${tag}</span>`;
                 }).join('')}
@@ -104,20 +114,40 @@ function openModal(index) {
     const modal = document.getElementById('beer-modal');
     const modalBody = document.getElementById('modal-body');
     
-    const tagsHtml = beer.tags && beer.tags.length > 0 && beer.tags[0] !== 'Nessuno'
+    // Gestisci tags come array o stringa
+    let tags = [];
+    if (beer.tags) {
+        if (Array.isArray(beer.tags)) {
+            tags = beer.tags.filter(t => t && t !== 'Nessuno');
+        } else if (typeof beer.tags === 'string') {
+            tags = [beer.tags].filter(t => t && t !== 'Nessuno');
+        }
+    }
+    
+    const tagsHtml = tags.length > 0
         ? `<div class="beer-tags">
-            ${beer.tags.map(tag => {
+            ${tags.map(tag => {
                 const tagClass = tag.toLowerCase().replace(/\s+/g, '-');
                 return `<span class="beer-tag ${tagClass}">${tag}</span>`;
             }).join('')}
            </div>`
         : '';
     
-    const allergeniHtml = beer.allergeni && beer.allergeni.length > 0
+    // Gestisci allergeni come array o stringa
+    let allergeni = [];
+    if (beer.allergeni) {
+        if (Array.isArray(beer.allergeni)) {
+            allergeni = beer.allergeni.filter(a => a);
+        } else if (typeof beer.allergeni === 'string') {
+            allergeni = [beer.allergeni].filter(a => a);
+        }
+    }
+    
+    const allergeniHtml = allergeni.length > 0
         ? `<div class="modal-section">
-            <div class="modal-section-title">⚠️ Allergeni</div>
+            <div class="modal-section-title">Allergeni</div>
             <div class="modal-allergens">
-                ${beer.allergeni.map(allergene => 
+                ${allergeni.map(allergene => 
                     `<span class="allergen-badge">${allergene}</span>`
                 ).join('')}
             </div>

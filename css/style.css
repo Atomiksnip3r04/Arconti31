@@ -179,25 +179,45 @@ header h1 {
 }
 
 .beer-tag {
-    display: inline-block;
-    padding: 0.25rem 0.6rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.35rem 0.7rem;
     border-radius: 12px;
     font-size: 0.75rem;
     font-weight: 600;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.beer-tag.novita {
-    background: #10b981;
+.beer-tag::before {
+    content: '';
+    font-size: 0.9rem;
+}
+
+.beer-tag.novità::before {
+    content: '✨';
+}
+
+.beer-tag.novità {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
     color: white;
+}
+
+.beer-tag.senza-glutine::before {
+    content: '🌾';
 }
 
 .beer-tag.senza-glutine {
-    background: #3b82f6;
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
     color: white;
 }
 
-.beer-tag.specialita {
-    background: #8b5cf6;
+.beer-tag.specialità::before {
+    content: '⭐';
+}
+
+.beer-tag.specialità {
+    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
     color: white;
 }
 
@@ -406,12 +426,22 @@ footer {
 }
 
 .allergen-badge {
-    padding: 0.4rem 0.8rem;
-    background: #fee2e2;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 0.9rem;
+    background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
     color: #dc2626;
-    border-radius: 8px;
+    border-radius: 10px;
     font-size: 0.85rem;
     font-weight: 600;
+    border: 1px solid #fca5a5;
+    box-shadow: 0 2px 4px rgba(220, 38, 38, 0.1);
+}
+
+.allergen-badge::before {
+    content: '⚠️';
+    font-size: 1rem;
 }
 
 @media (max-width: 768px) {
