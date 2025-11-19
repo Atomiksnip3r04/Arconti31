@@ -368,9 +368,9 @@
             
             .hero { 
                 padding-top: 110px; 
-                height: auto; /* Permette alla pagina di allungarsi se necessario */
-                min-height: 100vh; /* Garantisce comunque l'altezza minima schermo */
-                padding-bottom: 220px; /* Spazio ancora più abbondante per footer e nuovi link */
+                height: auto; 
+                min-height: auto; /* Altezza naturale */
+                padding-bottom: 60px; /* Padding standard */
             }
 
             .subtitle { font-size: 0.8rem; letter-spacing: 3px; }
@@ -397,7 +397,10 @@
             }
             
             footer {
-                padding-bottom: 2.5rem; /* Un po' più di spazio dal bordo inferiore */
+                position: relative; /* Footer non più sovrapposto su mobile */
+                background: #050505; /* Sfondo solido per leggibilità */
+                padding: 3rem 1rem;
+                margin-top: 0;
             }
         }
     </style>
@@ -431,8 +434,6 @@
                     Scopri il Menù
                 </a>
             </div>
-            
-            <a href="https://www.webnovis.com" target="_blank" class="webnovis-link">Creato da Web Novis</a>
         </div>
     </header>
 
