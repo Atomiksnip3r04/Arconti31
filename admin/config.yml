@@ -21,7 +21,7 @@ collections:
       - {label: "Descrizione", name: "descrizione", widget: "text", required: false, pattern: ['.{0,1000}', "Massimo 1000 caratteri"]}
       - {label: "Prezzo (€)", name: "prezzo", widget: "number", value_type: "float", min: 0, step: 0.5}
       - {label: "Allergeni", name: "allergeni", widget: "select", options: ["Glutine", "Lattosio", "Uova", "Frutta a Guscio", "Pesce", "Soia", "Senza Glutine"], multiple: true, required: false}
-      - {label: "Tag Speciali", name: "tags", widget: "select", options: ["Novità", "Vegetariano", "Vegano", "Piccante"], multiple: true, required: false}
+      - {label: "Tag Speciali", name: "tags", widget: "select", options: ["Novità", "Vegetariano", "Vegano", "Piccante", "Più venduto"], multiple: true, required: false}
       - {label: "Disponibile", name: "disponibile", widget: "boolean", default: true}
       - {label: "Ordine", name: "order", widget: "number", default: 0, value_type: "int"}
 
@@ -44,7 +44,7 @@ collections:
       - {label: "Formato", name: "formato", widget: "string", required: false, hint: "Es: BOCCALE 0,5 L"}
       - {label: "Gradazione Alcolica (%)", name: "gradazione", widget: "string", required: false, hint: "Es: 5.2%"}
       - {label: "Categoria", name: "categoria", widget: "select", options: ["Chiara", "Scura", "Rossa", "Artigianale", "IPA", "Lager", "Weiss"]}
-      - {label: "Tag Speciali", name: "tags", widget: "select", options: ["Nessuno", "Novità", "Senza Glutine", "Specialità"], multiple: true, required: false}
+      - {label: "Tag Speciali", name: "tags", widget: "select", options: ["Nessuno", "Novità", "Senza Glutine", "Specialità", "Più venduto"], multiple: true, required: false}
       - {label: "Allergeni", name: "allergeni", widget: "select", options: ["Glutine", "Lattosio", "Solfiti", "Frutta a Guscio"], multiple: true, required: false}
       - {label: "Disponibile", name: "disponibile", widget: "boolean", default: true}
       - {label: "Ordine", name: "order", widget: "number", default: 0, value_type: "int"}
@@ -65,7 +65,7 @@ collections:
       - {label: "Prezzo (€)", name: "prezzo", widget: "number", value_type: "float", min: 0, step: 0.5}
       - {label: "Formato", name: "formato", widget: "string", required: false, hint: "Es: Calice"}
       - {label: "Gradazione Alcolica (%)", name: "gradazione", widget: "string", required: false, hint: "Es: 12%"}
-      - {label: "Tag Speciali", name: "tags", widget: "select", options: ["Nessuno", "Novità", "Senza Glutine", "Specialità", "Biologico"], multiple: true, required: false}
+      - {label: "Tag Speciali", name: "tags", widget: "select", options: ["Nessuno", "Novità", "Senza Glutine", "Specialità", "Biologico", "Più venduto"], multiple: true, required: false}
       - {label: "Allergeni", name: "allergeni", widget: "select", options: ["Glutine", "Lattosio", "Solfiti", "Frutta a Guscio", "Sedano", "Uova"], multiple: true, required: false}
       - {label: "Disponibile", name: "disponibile", widget: "boolean", default: true}
       - {label: "Ordine", name: "order", widget: "number", default: 0, value_type: "int"}
@@ -85,7 +85,7 @@ collections:
       - {label: "Descrizione Dettagliata", name: "descrizione_dettagliata", widget: "text", required: false, pattern: ['.{0,2000}', "Massimo 2000 caratteri"]}
       - {label: "Prezzo (€)", name: "prezzo", widget: "number", value_type: "float", min: 0, step: 0.5}
       - {label: "Formato", name: "formato", widget: "string", required: false}
-      - {label: "Tag Speciali", name: "tags", widget: "select", options: ["Nessuno", "Novità", "Senza Glutine", "Biologico"], multiple: true, required: false}
+      - {label: "Tag Speciali", name: "tags", widget: "select", options: ["Nessuno", "Novità", "Senza Glutine", "Biologico", "Più venduto"], multiple: true, required: false}
       - {label: "Allergeni", name: "allergeni", widget: "select", options: ["Glutine", "Lattosio", "Solfiti", "Frutta a Guscio"], multiple: true, required: false}
       - {label: "Disponibile", name: "disponibile", widget: "boolean", default: true}
       - {label: "Ordine", name: "order", widget: "number", default: 0, value_type: "int"}
@@ -105,7 +105,7 @@ collections:
       - {label: "Descrizione Dettagliata", name: "descrizione_dettagliata", widget: "text", required: false, pattern: ['.{0,2000}', "Massimo 2000 caratteri"]}
       - {label: "Prezzo (€)", name: "prezzo", widget: "number", value_type: "float", min: 0, step: 0.5}
       - {label: "Formato", name: "formato", widget: "string", required: false}
-      - {label: "Tag Speciali", name: "tags", widget: "select", options: ["Nessuno", "Novità", "Senza Glutine"], multiple: true, required: false}
+      - {label: "Tag Speciali", name: "tags", widget: "select", options: ["Nessuno", "Novità", "Senza Glutine", "Più venduto"], multiple: true, required: false}
       - {label: "Allergeni", name: "allergeni", widget: "select", options: ["Glutine", "Lattosio", "Solfiti"], multiple: true, required: false}
       - {label: "Disponibile", name: "disponibile", widget: "boolean", default: true}
       - {label: "Ordine", name: "order", widget: "number", default: 0, value_type: "int"}
@@ -125,7 +125,7 @@ collections:
       - {label: "Descrizione Dettagliata", name: "descrizione_dettagliata", widget: "text", required: false, pattern: ['.{0,2000}', "Massimo 2000 caratteri"]}
       - {label: "Prezzo (€)", name: "prezzo", widget: "number", value_type: "float", min: 0, step: 0.5}
       - {label: "Formato", name: "formato", widget: "string", required: false}
-      - {label: "Tag Speciali", name: "tags", widget: "select", options: ["Nessuno", "Novità", "Senza Glutine"], multiple: true, required: false}
+      - {label: "Tag Speciali", name: "tags", widget: "select", options: ["Nessuno", "Novità", "Senza Glutine", "Più venduto"], multiple: true, required: false}
       - {label: "Allergeni", name: "allergeni", widget: "select", options: ["Glutine", "Lattosio"], multiple: true, required: false}
       - {label: "Disponibile", name: "disponibile", widget: "boolean", default: true}
       - {label: "Ordine", name: "order", widget: "number", default: 0, value_type: "int"}
@@ -146,7 +146,7 @@ collections:
       - {label: "Prezzo (€)", name: "prezzo", widget: "number", value_type: "float", min: 0, step: 0.5}
       - {label: "Formato", name: "formato", widget: "string", required: false, hint: "Es: Calice, Bottiglia 0,75L"}
       - {label: "Gradazione Alcolica (%)", name: "gradazione", widget: "string", required: false}
-      - {label: "Tag Speciali", name: "tags", widget: "select", options: ["Nessuno", "Novità", "Biologico"], multiple: true, required: false}
+      - {label: "Tag Speciali", name: "tags", widget: "select", options: ["Nessuno", "Novità", "Biologico", "Più venduto"], multiple: true, required: false}
       - {label: "Allergeni", name: "allergeni", widget: "select", options: ["Solfiti"], multiple: true, required: false}
       - {label: "Disponibile", name: "disponibile", widget: "boolean", default: true}
       - {label: "Ordine", name: "order", widget: "number", default: 0, value_type: "int"}
@@ -167,7 +167,7 @@ collections:
       - {label: "Prezzo (€)", name: "prezzo", widget: "number", value_type: "float", min: 0, step: 0.5}
       - {label: "Formato", name: "formato", widget: "string", required: false, hint: "Es: Calice, Bottiglia 0,75L"}
       - {label: "Gradazione Alcolica (%)", name: "gradazione", widget: "string", required: false}
-      - {label: "Tag Speciali", name: "tags", widget: "select", options: ["Nessuno", "Novità", "Biologico"], multiple: true, required: false}
+      - {label: "Tag Speciali", name: "tags", widget: "select", options: ["Nessuno", "Novità", "Biologico", "Più venduto"], multiple: true, required: false}
       - {label: "Allergeni", name: "allergeni", widget: "select", options: ["Solfiti"], multiple: true, required: false}
       - {label: "Disponibile", name: "disponibile", widget: "boolean", default: true}
       - {label: "Ordine", name: "order", widget: "number", default: 0, value_type: "int"}
@@ -188,7 +188,7 @@ collections:
       - {label: "Prezzo (€)", name: "prezzo", widget: "number", value_type: "float", min: 0, step: 0.5}
       - {label: "Formato", name: "formato", widget: "string", required: false, hint: "Es: Calice, Bottiglia 0,75L"}
       - {label: "Gradazione Alcolica (%)", name: "gradazione", widget: "string", required: false}
-      - {label: "Tag Speciali", name: "tags", widget: "select", options: ["Nessuno", "Novità", "Biologico"], multiple: true, required: false}
+      - {label: "Tag Speciali", name: "tags", widget: "select", options: ["Nessuno", "Novità", "Biologico", "Più venduto"], multiple: true, required: false}
       - {label: "Allergeni", name: "allergeni", widget: "select", options: ["Solfiti"], multiple: true, required: false}
       - {label: "Disponibile", name: "disponibile", widget: "boolean", default: true}
       - {label: "Ordine", name: "order", widget: "number", default: 0, value_type: "int"}

@@ -407,6 +407,14 @@ header {
     border: 1px solid rgba(255, 215, 0, 0.3);
 }
 
+/* Stile specifico per tag "Più venduto" */
+.badge-più-venduto {
+    background: rgba(255, 69, 0, 0.2); /* Arancione/Rosso */
+    color: #ff4500;
+    border: 1px solid rgba(255, 69, 0, 0.3);
+    font-weight: 700;
+}
+
 .availability-dot {
     width: 8px; height: 8px;
     border-radius: 50%;

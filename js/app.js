@@ -8,6 +8,7 @@ const ICONS = {
         'Piccante': '🌶️',
         'Specialità': '⭐',
         'Biologico': 'bio',
+        'Più venduto': '🔥',
         'default': '🏷️'
     },
     // Mapping Immagini Categorie
@@ -205,7 +206,10 @@ function showCategory(categoryName, type) {
     let html = `
         <h2 class="section-title">${categoryName}</h2>
         <div class="beer-grid">
-            ${items.map((item, index) => renderCard(item, index, type)).join('')}
+            ${items
+                .filter(item => item.disponibile) // Filtra solo i prodotti disponibili
+                .map((item, index) => renderCard(item, index, type))
+                .join('')}
         </div>
     `;
     
@@ -248,7 +252,7 @@ function renderCard(item, index, type) {
                     const icon = ICONS.tags[tag] || ICONS.tags['default'];
                     // Rimuoviamo "Novità" se presente in favore dell'icona
                     const label = tag === 'Novità' ? 'Novità' : tag;
-                    const className = tag.toLowerCase().replace(/\s+/g, '-');
+                    const className = tag.toLowerCase().replace(/[^a-z0-9]+/g, '-'); // Normalizza classe CSS
                     return `<span class="badge badge-${className}">${icon} ${label}</span>`;
                 }).join('')}
             </div>`;
