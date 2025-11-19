@@ -509,8 +509,8 @@ header {
 
 .modal-close {
     position: absolute;
-    top: 15px;
-    right: 15px;
+    top: 10px;
+    right: 10px;
     background: rgba(0, 0, 0, 0.6);
     color: white;
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -554,6 +554,7 @@ header {
     justify-content: space-between;
     align-items: flex-start;
     margin-bottom: 10px;
+    padding-right: 30px; /* Spazio per evitare sovrapposizione con la X */
 }
 
 .modal-title {
