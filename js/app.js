@@ -1,3 +1,29 @@
+// Icon mapping per Tags e Allergeni
+const ICONS = {
+    tags: {
+        'Novità': '✨',
+        'Senza Glutine': '🌾🚫',
+        'Vegetariano': '🌿',
+        'Vegano': '🌱',
+        'Piccante': '🌶️',
+        'Specialità': '⭐',
+        'Biologico': 'bio',
+        'default': '🏷️'
+    },
+    allergeni: {
+        'Glutine': '🌾',
+        'Lattosio': '🥛',
+        'Uova': '🥚',
+        'Frutta a Guscio': '🥜',
+        'Pesce': '🐟',
+        'Soia': '🫘',
+        'Senza Glutine': '✅', // Caso speciale
+        'Solfiti': '🍷',
+        'Sedano': '🥬',
+        'default': '⚠️'
+    }
+};
+
 let beersData = null;
 let beveragesData = null;
 let foodData = null;
@@ -33,7 +59,7 @@ function showCategoriesView() {
     const categoriesView = document.getElementById('categories-view');
     let html = '';
     
-    // Sezioni Food (NUOVO)
+    // Sezioni Food
     if (foodData && foodData.foodByCategory) {
         const foodOrder = [
             { name: 'Hamburger di bufala', icon: '🍔' },
@@ -48,7 +74,6 @@ function showCategoriesView() {
             { name: 'Aperitivo', icon: '🥜' }
         ];
         
-        // Aggiungi header per il cibo se ci sono elementi
         const hasFood = foodOrder.some(cat => foodData.foodByCategory[cat.name]);
         if (hasFood) {
             html += '<h2 class="section-header">Cucina</h2><div class="categories-grid">';
@@ -62,11 +87,10 @@ function showCategoriesView() {
         }
     }
 
-    // Sezioni Menù Beverage (Header)
+    // Sezioni Beverage
     if ((beersData && beersData.beersBySection) || (beveragesData && beveragesData.beveragesByType)) {
         html += '<h2 class="section-header">Beverage</h2><div class="categories-grid">';
         
-        // Sezioni birre
         if (beersData && beersData.beersBySection) {
             const sectionOrder = [
                 { name: 'Birre artigianali alla spina a rotazione', icon: '🍺' },
@@ -83,7 +107,6 @@ function showCategoriesView() {
             });
         }
         
-        // Categorie bevande
         if (beveragesData && beveragesData.beveragesByType) {
             const typeOrder = [
                 { name: 'Cocktails', icon: '🍹' },
@@ -111,16 +134,19 @@ function showCategoriesView() {
 function createCategoryCard(name, count, icon, type) {
     return `
         <div class="category-card" onclick="showCategory('${name}', '${type}')">
-            <span class="category-icon">${icon}</span>
-            <div class="category-title">${name}</div>
-            <div class="category-count">${count} prodotti</div>
+            <div class="category-icon-wrapper">${icon}</div>
+            <div class="category-info">
+                <div class="category-title">${name}</div>
+                <div class="category-count">${count} prodotti</div>
+            </div>
+            <div class="category-arrow">→</div>
         </div>
     `;
 }
 
 function showCategory(categoryName, type) {
     currentView = 'detail';
-    document.getElementById('breadcrumb').style.display = 'flex'; // Changed to flex for alignment
+    document.getElementById('breadcrumb').style.display = 'flex';
     document.getElementById('categories-view').style.display = 'none';
     document.getElementById('detail-view').style.display = 'block';
     
@@ -152,21 +178,17 @@ function goHome() {
 }
 
 function renderCard(item, index, type) {
-    let tags = [];
-    if (item.tags) {
-        if (Array.isArray(item.tags)) {
-            tags = item.tags.filter(t => t && t !== 'Nessuno');
-        } else if (typeof item.tags === 'string') {
-            tags = [item.tags].filter(t => t && t !== 'Nessuno');
-        }
-    }
-    
     const hasFullImage = item.immagine && !item.logo;
     const hasLogo = item.logo;
+    const hasAnyImage = item.immagine || false;
     
-    const imageHtml = hasFullImage 
-        ? `<img src="${item.immagine}" alt="${item.nome}" class="beer-image" loading="lazy">`
-        : `<div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; color:#333; font-size:3rem;">🍽️</div>`;
+    // Se non c'è immagine copertina, NON renderizzare placeholder
+    const imageHtml = hasAnyImage 
+        ? `<div class="card-image-container"><img src="${item.immagine}" alt="${item.nome}" class="beer-image" loading="lazy"></div>`
+        : ''; // Stringa vuota se non c'è immagine
+    
+    // Classe speciale se non c'è immagine per adattare layout CSS
+    const noImageClass = !hasAnyImage ? 'no-image-card' : '';
     
     const logoHtml = hasLogo 
         ? `<img src="${item.logo}" alt="${item.nome}" class="beer-logo">`
@@ -174,23 +196,47 @@ function renderCard(item, index, type) {
     
     const categoryLabel = type === 'beer' ? item.categoria : (type === 'food' ? item.category : item.tipo);
     
+    // Generazione Badges (Tags) con icone
+    let tagsHtml = '';
+    if (item.tags) {
+        let tagsList = Array.isArray(item.tags) ? item.tags : [item.tags];
+        tagsList = tagsList.filter(t => t && t !== 'Nessuno');
+        if (tagsList.length > 0) {
+            tagsHtml = `<div class="card-badges">
+                ${tagsList.map(tag => {
+                    const icon = ICONS.tags[tag] || ICONS.tags['default'];
+                    // Rimuoviamo "Novità" se presente in favore dell'icona
+                    const label = tag === 'Novità' ? 'Novità' : tag;
+                    const className = tag.toLowerCase().replace(/\s+/g, '-');
+                    return `<span class="badge badge-${className}">${icon} ${label}</span>`;
+                }).join('')}
+            </div>`;
+        }
+    }
+
+    // Descrizione troncata
+    const description = item.descrizione ? `<p class="beer-description">${item.descrizione}</p>` : '';
+    
     return `
-        <div class="beer-card" data-category="${item.categoria || item.category || ''}" data-type="${type}" style="animation-delay: ${(index % 10) * 0.1}s" onclick="openModal(${index}, '${type}', '${item.nome.replace(/'/g, "\\'")}')">
-            <div class="card-image-container">
-                ${imageHtml}
-            </div>
+        <div class="beer-card ${noImageClass}" style="animation-delay: ${(index % 10) * 0.05}s" onclick="openModal(${index}, '${type}', '${item.nome.replace(/'/g, "\\'")}')">
+            ${imageHtml}
             <div class="beer-content">
                 <div class="card-header">
-                    <h3 class="beer-name">${item.nome}</h3>
-                    ${logoHtml}
-                </div>
-                ${categoryLabel ? `<span class="beer-category-badge">${categoryLabel}</span>` : ''}
-                <p class="beer-description">${item.descrizione || ''}</p>
-                <div class="card-footer">
-                    <div class="availability ${item.disponibile ? 'available' : 'unavailable'}">
-                        ${item.disponibile ? 'Disponibile' : 'Esaurito'}
+                    <div class="header-left">
+                        ${logoHtml}
+                        <div class="title-group">
+                            ${categoryLabel ? `<span class="tiny-category">${categoryLabel}</span>` : ''}
+                            <h3 class="beer-name">${item.nome}</h3>
+                        </div>
                     </div>
-                    <span class="beer-price">€${item.prezzo}</span>
+                    <div class="price-tag">€${item.prezzo}</div>
+                </div>
+                
+                ${description}
+                
+                <div class="card-footer">
+                     ${tagsHtml}
+                    <div class="availability-dot ${item.disponibile ? 'available' : 'unavailable'}" title="${item.disponibile ? 'Disponibile' : 'Non disponibile'}"></div>
                 </div>
             </div>
         </div>
@@ -199,14 +245,12 @@ function renderCard(item, index, type) {
 
 function openModal(index, type, itemName) {
     let items = [];
-    
-    // Trova gli items della categoria corrente (globale per semplicità)
-    if (type === 'beer' && beersData && beersData.beersBySection) {
-        Object.values(beersData.beersBySection).forEach(sectionItems => { items = items.concat(sectionItems); });
-    } else if (type === 'beverage' && beveragesData && beveragesData.beveragesByType) {
-        Object.values(beveragesData.beveragesByType).forEach(typeItems => { items = items.concat(typeItems); });
-    } else if (type === 'food' && foodData && foodData.foodByCategory) {
-        Object.values(foodData.foodByCategory).forEach(catItems => { items = items.concat(catItems); });
+    if (type === 'beer' && beersData) {
+        Object.values(beersData.beersBySection).forEach(l => items = items.concat(l));
+    } else if (type === 'beverage' && beveragesData) {
+        Object.values(beveragesData.beveragesByType).forEach(l => items = items.concat(l));
+    } else if (type === 'food' && foodData) {
+        Object.values(foodData.foodByCategory).forEach(l => items = items.concat(l));
     }
     
     const item = items.find(i => i.nome === itemName.replace(/\\'/g, "'"));
@@ -215,54 +259,66 @@ function openModal(index, type, itemName) {
     const modal = document.getElementById('beer-modal');
     const modalBody = document.getElementById('modal-body');
     
-    // Gestione Tags
-    let tags = [];
+    const imageHtml = item.immagine ? `<div class="modal-hero-wrapper"><img src="${item.immagine}" class="modal-hero-img"></div>` : '';
+    
+    // Tags Completi
+    let tagsHtml = '';
     if (item.tags) {
-        if (Array.isArray(item.tags)) tags = item.tags.filter(t => t && t !== 'Nessuno');
-        else if (typeof item.tags === 'string') tags = [item.tags].filter(t => t && t !== 'Nessuno');
+        let tagsList = Array.isArray(item.tags) ? item.tags : [item.tags];
+        tagsList = tagsList.filter(t => t && t !== 'Nessuno');
+        if(tagsList.length > 0) {
+             tagsHtml = `<div class="modal-tags-list">
+                ${tagsList.map(tag => {
+                    const icon = ICONS.tags[tag] || ICONS.tags['default'];
+                    return `<span class="modal-tag">${icon} ${tag}</span>`;
+                }).join('')}
+             </div>`;
+        }
     }
-    
-    const tagsHtml = tags.length > 0
-        ? `<div class="modal-tags">
-            ${tags.map(tag => `<span class="tag-pill">${tag}</span>`).join('')}
-           </div>`
-        : '';
-    
-    // Gestione Allergeni
-    let allergeni = [];
+
+    // Allergeni con Icone
+    let allergeniHtml = '';
     if (item.allergeni) {
-        if (Array.isArray(item.allergeni)) allergeni = item.allergeni.filter(a => a);
-        else if (typeof item.allergeni === 'string') allergeni = [item.allergeni].filter(a => a);
+        let allList = Array.isArray(item.allergeni) ? item.allergeni : [item.allergeni];
+        allList = allList.filter(a => a);
+        if(allList.length > 0) {
+            allergeniHtml = `
+            <div class="modal-allergens-section">
+                <h4>Allergeni</h4>
+                <div class="allergens-grid">
+                    ${allList.map(a => {
+                        const icon = ICONS.allergeni[a] || ICONS.allergeni['default'];
+                        return `<div class="allergen-item"><span class="allergen-icon">${icon}</span> ${a}</div>`;
+                    }).join('')}
+                </div>
+            </div>`;
+        }
     }
-    
-    const allergeniHtml = allergeni.length > 0
-        ? `<div class="modal-tags" style="margin-top:20px; border-top:1px solid #333; padding-top:10px;">
-            <strong style="color:#888; font-size:0.8rem; display:block; margin-bottom:5px;">ALLERGENI:</strong>
-            ${allergeni.map(a => `<span class="tag-pill" style="border-color:#ef4444; color:#ef4444;">${a}</span>`).join('')}
-           </div>`
-        : '';
-    
-    const imageHtml = item.immagine ? `<img src="${item.immagine}" alt="${item.nome}" class="modal-hero-img">` : '';
-    const categoryLabel = item.categoria || item.category || item.tipo || '';
     
     modalBody.innerHTML = `
         ${imageHtml}
-        <div class="modal-body">
-            <div class="modal-title-group">
-                <span class="beer-category-badge">${categoryLabel}</span>
+        <div class="modal-content-scroll">
+            <div class="modal-header-row">
                 <h2 class="modal-title">${item.nome}</h2>
-                <div class="modal-price-tag">€${item.prezzo}</div>
+                <span class="modal-price-big">€${item.prezzo}</span>
+            </div>
+            ${item.logo ? `<img src="${item.logo}" class="modal-logo-small" alt="Logo">` : ''}
+            
+            <div class="modal-desc-text">
+                ${item.descrizione_dettagliata || item.descrizione || 'Nessuna descrizione aggiuntiva.'}
             </div>
             
             ${tagsHtml}
             
-            <div class="modal-desc">${item.descrizione_dettagliata || item.descrizione || 'Nessuna descrizione disponibile.'}</div>
-            
-            ${allergeniHtml}
-            
-            <div style="margin-top: 20px; text-align:center;">
-                <button onclick="closeModal()" class="btn-icon" style="width:100%; justify-content:center; background:var(--accent); color:black; border:none; font-weight:700;">CHIUDI</button>
+            <div class="modal-meta-info">
+                ${item.gradazione ? `<div class="meta-box"><strong>Alcol</strong> ${item.gradazione}</div>` : ''}
+                ${item.formato ? `<div class="meta-box"><strong>Formato</strong> ${item.formato}</div>` : ''}
             </div>
+
+            ${allergeniHtml}
+        </div>
+        <div class="modal-close-btn-wrapper">
+            <button onclick="closeModal()" class="modal-close-action">Chiudi</button>
         </div>
     `;
     
@@ -271,39 +327,23 @@ function openModal(index, type, itemName) {
 }
 
 function closeModal() {
-    const modal = document.getElementById('beer-modal');
-    modal.classList.remove('active');
+    document.getElementById('beer-modal').classList.remove('active');
     document.body.style.overflow = '';
 }
 
 document.getElementById('beer-modal').addEventListener('click', (e) => {
-    if (e.target.id === 'beer-modal') {
-        closeModal();
-    }
+    if (e.target.id === 'beer-modal') closeModal();
 });
 
 document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-        if (document.getElementById('beer-modal').classList.contains('active')) {
-            closeModal();
-        } else if (currentView === 'detail') {
-            goHome();
-        }
-    }
+    if (e.key === 'Escape') closeModal();
 });
 
 function toggleCompactView() {
     const grid = document.querySelector('.beer-grid');
-    const toggleBtn = document.getElementById('toggle-view-btn');
-    const toggleText = toggleBtn.querySelector('.toggle-text');
-    
-    if (grid.classList.contains('compact-view')) {
-        grid.classList.remove('compact-view');
-        toggleText.textContent = 'Lista';
-    } else {
-        grid.classList.add('compact-view');
-        toggleText.textContent = 'Griglia';
-    }
+    const toggleText = document.querySelector('.toggle-text');
+    grid.classList.toggle('compact-view');
+    toggleText.textContent = grid.classList.contains('compact-view') ? 'Lista' : 'Griglia';
 }
 
 document.addEventListener('DOMContentLoaded', loadAllBeverages);
