@@ -3,76 +3,332 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Menù Birre - Il Nostro Ristorante</title>
-    <meta name="description" content="Scopri la nostra selezione di birre artigianali e internazionali">
-    <link rel="stylesheet" href="css/style.css">
+    
+    <!-- SEO Meta Tags -->
+    <title>Arconti 31 | Ristorante & Hamburgeria a Gallarate</title>
+    <meta name="description" content="Benvenuti da Arconti 31 a Gallarate. Hamburger di qualità, specialità di carne e birre selezionate. Scopri il nostro menù digitale o prenota su GoLocal.">
+    <meta name="keywords" content="Arconti 31, ristorante Gallarate, hamburgeria, birreria, menù digitale, carne alla griglia, GoLocal, aperitivo Gallarate">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
     <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    
+    <style>
+        /* --- LANDING SPECIFIC STYLES --- */
+        :root {
+            --bg-color: #0b0b0b;
+            --text-color: #e0e0e0;
+            --accent: #f59e0b; /* Arancione Arconti */
+            --secondary: #1f1f1f;
+            --font-main: 'Playfair Display', serif;
+            --font-sans: 'DM Sans', sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: var(--font-sans);
+            overflow-x: hidden;
+        }
+
+        a { text-decoration: none; color: inherit; transition: 0.3s; }
+
+        /* --- NAVIGATION --- */
+        nav {
+            position: fixed;
+            top: 0; left: 0; width: 100%;
+            padding: 1.5rem 4rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent);
+        }
+
+        .logo {
+            font-family: var(--font-main);
+            font-size: 1.8rem; /* Slightly bigger */
+            letter-spacing: 1px;
+            font-weight: 600;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            animation: logoReveal 1s ease forwards;
+        }
+
+        .logo img {
+            height: 50px;
+            width: auto;
+        }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            height: 100vh;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        .hero-bg {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url('images/loghi/sfondo-homepage-arconti31.png'); 
+            background-size: cover;
+            background-position: center;
+            opacity: 0; /* Parte invisibile per l'animazione */
+            animation: heroReveal 2s ease-out forwards, kenBurns 20s infinite alternate ease-in-out;
+        }
+        
+        .hero-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at center, rgba(0,0,0,0.3) 0%, rgba(11,11,11,0.8) 100%);
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            animation: fadeUp 1.2s ease forwards 0.5s; /* Leggero ritardo rispetto allo sfondo */
+            opacity: 0;
+            transform: translateY(30px); 
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            color: var(--accent);
+            margin-bottom: 1.5rem;
+            display: block;
+            font-weight: 700;
+        }
+
+        h1 {
+            font-family: var(--font-main);
+            font-size: clamp(3rem, 8vw, 6rem);
+            line-height: 1.1;
+            margin-bottom: 2rem;
+            font-style: italic;
+            color: white;
+        }
+
+        p.intro-text {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            color: #ccc;
+            margin-bottom: 3rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* --- BUTTONS --- */
+        .cta-container {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 1rem 2.5rem;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            min-width: 220px;
+        }
+
+        .btn-primary {
+            background-color: var(--accent);
+            color: white;
+            border: 2px solid var(--accent);
+        }
+
+        .btn-primary:hover {
+            background-color: transparent;
+            color: var(--accent);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .btn-secondary:hover {
+            background-color: white;
+            color: black;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            padding: 2rem;
+            text-align: center;
+            z-index: 10;
+            color: rgba(255,255,255,0.6);
+            font-size: 0.8rem;
+            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .footer-links a:hover {
+            color: var(--accent);
+        }
+
+        /* --- ANIMATIONS --- */
+        @keyframes fadeUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes heroReveal {
+            0% { opacity: 0; filter: blur(10px) brightness(0.5); transform: scale(1.05); }
+            100% { opacity: 0.6; filter: blur(0) brightness(0.8); transform: scale(1); }
+        }
+
+        @keyframes kenBurns {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.15); }
+        }
+
+        @keyframes logoReveal {
+            0% { opacity: 0; transform: translateY(-20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- MOBILE --- */
+        @media (max-width: 768px) {
+            nav { 
+                padding: 1rem 1.5rem; 
+                flex-direction: column;
+                gap: 0.5rem;
+                background: linear-gradient(to bottom, rgba(0,0,0,0.95), rgba(0,0,0,0.8));
+            }
+            
+            .logo {
+                flex-direction: column;
+                text-align: center;
+                gap: 5px;
+                font-size: 1.5rem;
+            }
+            
+            h1 { 
+                font-size: 3rem; 
+                margin-bottom: 1.5rem; 
+            }
+            
+            .hero {
+                height: auto;
+                min-height: 100vh;
+                padding: 140px 20px 100px; /* Increased padding top */
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+            }
+
+            .subtitle {
+                margin-bottom: 1rem;
+                font-size: 0.9rem;
+            }
+
+            .intro-text {
+                font-size: 1rem;
+                margin-bottom: 2rem;
+            }
+
+            .cta-container { 
+                flex-direction: column; 
+                gap: 1rem; 
+                width: 100%;
+            }
+            
+            .btn { width: 100%; }
+
+            footer {
+                position: relative;
+                background: #0b0b0b;
+                padding: 2rem 1rem;
+                margin-top: auto;
+            }
+
+            .footer-links {
+                flex-direction: column;
+                gap: 1rem;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
 </head>
 <body>
-    <header>
-        <div class="container header-content">
-            <div class="header-text">
-                <h1>🍺 Menù Beverage</h1>
-                <p class="subtitle">Selezione artigianale e internazionale</p>
+
+    <nav>
+        <div class="logo">
+            <img src="images/loghi/logo_arconti31.png" alt="Arconti 31 Logo">
+            ARCONTI 31
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <span class="subtitle">Pub & Food</span>
+            <h1>Il Gusto Autentico <br>a Gallarate</h1>
+            <p class="intro-text">
+                Un'esperienza culinaria unica dove la tradizione incontra la qualità. 
+                Dagli hamburger gourmet alle birre artigianali selezionate.
+            </p>
+            
+            <div class="cta-container">
+                <!-- Link al Menù Digitale (che ora è menu.html) -->
+                <a href="menu.html" class="btn btn-primary">
+                    Visualizza Menù Digitale
+                </a>
+                
+                <!-- Link a GoLocal (Placeholder come richiesto) -->
+                <a href="#" class="btn btn-secondary">
+                    Prenota su GoLocal
+                </a>
             </div>
-            <img src="images/loghi/logo_arconti31.png" alt="Arconti31 Logo" class="header-logo">
         </div>
     </header>
 
-    <main class="container">
-        <!-- Breadcrumb navigation -->
-        <div id="breadcrumb" class="breadcrumb" style="display: none;">
-            <div class="breadcrumb-controls">
-                <button class="breadcrumb-btn" onclick="goHome()">← Torna al Menù</button>
-                <button class="toggle-view-btn" onclick="toggleCompactView()" id="toggle-view-btn">
-                    <span class="toggle-icon">📋</span>
-                    <span class="toggle-text">Vista Compatta</span>
-                </button>
-            </div>
-        </div>
-
-        <!-- Categories view (home) -->
-        <div id="categories-view" class="categories-view">
-            <div class="loading">Caricamento...</div>
-        </div>
-
-        <!-- Detail view (single category) -->
-        <div id="detail-view" class="detail-view" style="display: none;">
-            <div id="detail-content"></div>
-        </div>
-    </main>
-
     <footer>
-        <div class="container footer-content">
-            <div class="footer-address">
-                <span class="address-icon">📍</span>
-                <a href="https://www.google.com/maps/dir/?api=1&destination=Via+Vittorio+Arconti,+31,+21013+Gallarate+VA" 
-                   target="_blank" 
-                   rel="noopener noreferrer" 
-                   class="address-link">
-                    Via Vittorio Arconti, 31, 21013 Gallarate VA
-                </a>
-            </div>
-            <p class="footer-copyright">&copy; 2025 - Arconti31</p>
-            <a href="https://www.webnovis.com" 
-               target="_blank" 
-               rel="noopener noreferrer" 
-               class="creator-badge">
-                <span class="creator-icon">✨</span>
-                <span class="creator-text">Creato da <strong>Web Novis</strong></span>
-            </a>
+        <div class="footer-links">
+            <a href="https://www.google.com/maps/dir/?api=1&destination=Via+Vittorio+Arconti,+31,+21013+Gallarate+VA" target="_blank">📍 Via Vittorio Arconti 31, Gallarate</a>
+            <a href="tel:+391234567890">📞 Contattaci</a>
         </div>
+        <p>&copy; 2025 Arconti 31. Tutti i diritti riservati.</p>
     </footer>
 
-    <!-- Modal Popup -->
-    <div id="beer-modal" class="modal-overlay">
-        <div class="modal-content">
-            <button class="modal-close" onclick="closeModal()">&times;</button>
-            <div id="modal-body"></div>
-        </div>
-    </div>
-
-    <script src="js/app.js"></script>
     <script>
       if (window.netlifyIdentity) {
         window.netlifyIdentity.on("init", user => {
@@ -84,5 +340,6 @@
         });
       }
     </script>
+
 </body>
 </html>

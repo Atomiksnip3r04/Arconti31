@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menù Birre - Il Nostro Ristorante</title>
+    <meta name="description" content="Scopri la nostra selezione di birre artigianali e internazionali">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <div class="header-text">
+                <h1>🍺 Menù Beverage</h1>
+                <p class="subtitle">Selezione artigianale e internazionale</p>
+            </div>
+            <img src="images/loghi/logo_arconti31.png" alt="Arconti31 Logo" class="header-logo">
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Breadcrumb navigation -->
+        <div id="breadcrumb" class="breadcrumb" style="display: none;">
+            <div class="breadcrumb-controls">
+                <button class="breadcrumb-btn" onclick="goHome()">← Torna al Menù</button>
+                <button class="toggle-view-btn" onclick="toggleCompactView()" id="toggle-view-btn">
+                    <span class="toggle-icon">📋</span>
+                    <span class="toggle-text">Vista Compatta</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Categories view (home) -->
+        <div id="categories-view" class="categories-view">
+            <div class="loading">Caricamento...</div>
+        </div>
+
+        <!-- Detail view (single category) -->
+        <div id="detail-view" class="detail-view" style="display: none;">
+            <div id="detail-content"></div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container footer-content">
+            <div class="footer-address">
+                <span class="address-icon">📍</span>
+                <a href="https://www.google.com/maps/dir/?api=1&destination=Via+Vittorio+Arconti,+31,+21013+Gallarate+VA" 
+                   target="_blank" 
+                   rel="noopener noreferrer" 
+                   class="address-link">
+                    Via Vittorio Arconti, 31, 21013 Gallarate VA
+                </a>
+            </div>
+            <p class="footer-copyright">&copy; 2025 - Arconti31</p>
+            <a href="https://www.webnovis.com" 
+               target="_blank" 
+               rel="noopener noreferrer" 
+               class="creator-badge">
+                <span class="creator-icon">✨</span>
+                <span class="creator-text">Creato da <strong>Web Novis</strong></span>
+            </a>
+        </div>
+    </footer>
+
+    <!-- Modal Popup -->
+    <div id="beer-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script>
+      if (window.netlifyIdentity) {
+        window.netlifyIdentity.on("init", user => {
+          if (!user) {
+            window.netlifyIdentity.on("login", () => {
+              document.location.href = "/admin/";
+            });
+          }
+        });
+      }
+    </script>
+</body>
+</html>
