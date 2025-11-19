@@ -10,30 +10,30 @@
 </head>
 <body>
     <header>
-        <div class="container header-content">
-            <div class="header-text">
-                <h1>🍺 Menù Beverage</h1>
-                <p class="subtitle">Selezione artigianale e internazionale</p>
+        <div class="header-content">
+            <div class="header-brand">
+                <img src="images/loghi/logo_arconti31.png" alt="Logo" class="header-logo">
+                <span class="header-title">ARCONTI 31</span>
             </div>
-            <img src="images/loghi/logo_arconti31.png" alt="Arconti31 Logo" class="header-logo">
+            <!-- Optional: User Icon or Menu Button -->
         </div>
     </header>
 
     <main class="container">
         <!-- Breadcrumb navigation -->
         <div id="breadcrumb" class="breadcrumb" style="display: none;">
-            <div class="breadcrumb-controls">
-                <button class="breadcrumb-btn" onclick="goHome()">← Torna al Menù</button>
-                <button class="toggle-view-btn" onclick="toggleCompactView()" id="toggle-view-btn">
-                    <span class="toggle-icon">📋</span>
-                    <span class="toggle-text">Vista Compatta</span>
-                </button>
-            </div>
+            <button class="btn-icon" onclick="goHome()">
+                <span>←</span> Torna alle Categorie
+            </button>
+            <button class="btn-icon" onclick="toggleCompactView()" id="toggle-view-btn">
+                <span class="toggle-icon">📋</span>
+                <span class="toggle-text">Lista</span>
+            </button>
         </div>
 
         <!-- Categories view (home) -->
         <div id="categories-view" class="categories-view">
-            <div class="loading">Caricamento...</div>
+            <div class="loading" style="color: #666; text-align: center; margin-top: 50px;">Caricamento Menù...</div>
         </div>
 
         <!-- Detail view (single category) -->
@@ -43,25 +43,7 @@
     </main>
 
     <footer>
-        <div class="container footer-content">
-            <div class="footer-address">
-                <span class="address-icon">📍</span>
-                <a href="https://www.google.com/maps/dir/?api=1&destination=Via+Vittorio+Arconti,+31,+21013+Gallarate+VA" 
-                   target="_blank" 
-                   rel="noopener noreferrer" 
-                   class="address-link">
-                    Via Vittorio Arconti, 31, 21013 Gallarate VA
-                </a>
-            </div>
-            <p class="footer-copyright">&copy; 2025 - Arconti31</p>
-            <a href="https://www.webnovis.com" 
-               target="_blank" 
-               rel="noopener noreferrer" 
-               class="creator-badge">
-                <span class="creator-icon">✨</span>
-                <span class="creator-text">Creato da <strong>Web Novis</strong></span>
-            </a>
-        </div>
+        <p>&copy; 2025 Arconti 31 - <a href="index.html" class="footer-link">Torna alla Home</a></p>
     </footer>
 
     <!-- Modal Popup -->

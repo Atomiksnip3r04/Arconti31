@@ -51,56 +51,58 @@ function showCategoriesView() {
         // Aggiungi header per il cibo se ci sono elementi
         const hasFood = foodOrder.some(cat => foodData.foodByCategory[cat.name]);
         if (hasFood) {
-            html += '<h2 class="section-header">Menù Food</h2>';
+            html += '<h2 class="section-header">Cucina</h2><div class="categories-grid">';
             foodOrder.forEach(cat => {
                 const items = foodData.foodByCategory[cat.name];
                 if (items && items.length > 0) {
                     html += createCategoryCard(cat.name, items.length, cat.icon, 'food');
                 }
             });
+            html += '</div>';
         }
     }
 
     // Sezioni Menù Beverage (Header)
     if ((beersData && beersData.beersBySection) || (beveragesData && beveragesData.beveragesByType)) {
-        html += '<h2 class="section-header">Menù Beverage</h2>';
-    }
-
-    // Sezioni birre
-    if (beersData && beersData.beersBySection) {
-        const sectionOrder = [
-            { name: 'Birre artigianali alla spina a rotazione', icon: '🍺' },
-            { name: 'Birre alla spina', icon: '🍻' },
-            { name: 'Birre speciali in bottiglia', icon: '🍾' },
-            { name: 'Frigo Birre', icon: '❄️' }
-        ];
+        html += '<h2 class="section-header">Beverage</h2><div class="categories-grid">';
         
-        sectionOrder.forEach(section => {
-            const items = beersData.beersBySection[section.name];
-            if (items && items.length > 0) {
-                html += createCategoryCard(section.name, items.length, section.icon, 'beer');
-            }
-        });
-    }
-    
-    // Categorie bevande
-    if (beveragesData && beveragesData.beveragesByType) {
-        const typeOrder = [
-            { name: 'Cocktails', icon: '🍹' },
-            { name: 'Analcolici', icon: '🥤' },
-            { name: 'Bibite', icon: '🥫' },
-            { name: 'Caffetteria', icon: '☕' },
-            { name: 'Bollicine', icon: '🥂' },
-            { name: 'Bianchi fermi', icon: '🍷' },
-            { name: 'Vini rossi', icon: '🍷' }
-        ];
+        // Sezioni birre
+        if (beersData && beersData.beersBySection) {
+            const sectionOrder = [
+                { name: 'Birre artigianali alla spina a rotazione', icon: '🍺' },
+                { name: 'Birre alla spina', icon: '🍻' },
+                { name: 'Birre speciali in bottiglia', icon: '🍾' },
+                { name: 'Frigo Birre', icon: '❄️' }
+            ];
+            
+            sectionOrder.forEach(section => {
+                const items = beersData.beersBySection[section.name];
+                if (items && items.length > 0) {
+                    html += createCategoryCard(section.name, items.length, section.icon, 'beer');
+                }
+            });
+        }
         
-        typeOrder.forEach(type => {
-            const items = beveragesData.beveragesByType[type.name];
-            if (items && items.length > 0) {
-                html += createCategoryCard(type.name, items.length, type.icon, 'beverage');
-            }
-        });
+        // Categorie bevande
+        if (beveragesData && beveragesData.beveragesByType) {
+            const typeOrder = [
+                { name: 'Cocktails', icon: '🍹' },
+                { name: 'Analcolici', icon: '🥤' },
+                { name: 'Bibite', icon: '🥫' },
+                { name: 'Caffetteria', icon: '☕' },
+                { name: 'Bollicine', icon: '🥂' },
+                { name: 'Bianchi fermi', icon: '🍷' },
+                { name: 'Vini rossi', icon: '🍷' }
+            ];
+            
+            typeOrder.forEach(type => {
+                const items = beveragesData.beveragesByType[type.name];
+                if (items && items.length > 0) {
+                    html += createCategoryCard(type.name, items.length, type.icon, 'beverage');
+                }
+            });
+        }
+        html += '</div>';
     }
     
     categoriesView.innerHTML = html || '<p class="loading">Nessuna categoria disponibile.</p>';
@@ -109,23 +111,16 @@ function showCategoriesView() {
 function createCategoryCard(name, count, icon, type) {
     return `
         <div class="category-card" onclick="showCategory('${name}', '${type}')">
-            <div class="category-header">
-                <div class="category-title">
-                    <span class="category-icon">${icon}</span>
-                    <span>${name}</span>
-                </div>
-                <div style="display: flex; align-items: center; gap: 1rem;">
-                    <span class="category-count">${count} ${count === 1 ? 'prodotto' : 'prodotti'}</span>
-                    <span class="category-arrow">→</span>
-                </div>
-            </div>
+            <span class="category-icon">${icon}</span>
+            <div class="category-title">${name}</div>
+            <div class="category-count">${count} prodotti</div>
         </div>
     `;
 }
 
 function showCategory(categoryName, type) {
     currentView = 'detail';
-    document.getElementById('breadcrumb').style.display = 'block';
+    document.getElementById('breadcrumb').style.display = 'flex'; // Changed to flex for alignment
     document.getElementById('categories-view').style.display = 'none';
     document.getElementById('detail-view').style.display = 'block';
     
@@ -166,22 +161,12 @@ function renderCard(item, index, type) {
         }
     }
     
-    const tagsHtml = tags.length > 0
-        ? `<div class="beer-tags">
-            ${tags.map(tag => {
-                const tagClass = tag.toLowerCase().replace(/\s+/g, '-');
-                return `<span class="beer-tag ${tagClass}">${tag}</span>`;
-            }).join('')}
-           </div>`
-        : '';
-    
     const hasFullImage = item.immagine && !item.logo;
     const hasLogo = item.logo;
-    const cardClass = hasLogo && !hasFullImage ? 'logo-only' : '';
     
     const imageHtml = hasFullImage 
         ? `<img src="${item.immagine}" alt="${item.nome}" class="beer-image" loading="lazy">`
-        : '';
+        : `<div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; color:#333; font-size:3rem;">🍽️</div>`;
     
     const logoHtml = hasLogo 
         ? `<img src="${item.logo}" alt="${item.nome}" class="beer-logo">`
@@ -190,21 +175,22 @@ function renderCard(item, index, type) {
     const categoryLabel = type === 'beer' ? item.categoria : (type === 'food' ? item.category : item.tipo);
     
     return `
-        <div class="beer-card ${cardClass}" data-category="${item.categoria || item.category || ''}" data-type="${type}" style="animation-delay: ${(index % 10) * 0.1}s" onclick="openModal(${index}, '${type}', '${item.nome.replace(/'/g, "\\'")}')">
-            ${imageHtml}
+        <div class="beer-card" data-category="${item.categoria || item.category || ''}" data-type="${type}" style="animation-delay: ${(index % 10) * 0.1}s" onclick="openModal(${index}, '${type}', '${item.nome.replace(/'/g, "\\'")}')">
+            <div class="card-image-container">
+                ${imageHtml}
+            </div>
             <div class="beer-content">
-                <div class="beer-header">
-                    <div class="beer-name-wrapper">
-                        ${logoHtml}
-                        <h2 class="beer-name">${item.nome}</h2>
+                <div class="card-header">
+                    <h3 class="beer-name">${item.nome}</h3>
+                    ${logoHtml}
+                </div>
+                ${categoryLabel ? `<span class="beer-category-badge">${categoryLabel}</span>` : ''}
+                <p class="beer-description">${item.descrizione || ''}</p>
+                <div class="card-footer">
+                    <div class="availability ${item.disponibile ? 'available' : 'unavailable'}">
+                        ${item.disponibile ? 'Disponibile' : 'Esaurito'}
                     </div>
                     <span class="beer-price">€${item.prezzo}</span>
-                </div>
-                ${categoryLabel ? `<span class="beer-category">${categoryLabel}</span>` : ''}
-                ${tagsHtml}
-                <p class="beer-description">${item.descrizione}</p>
-                <div class="availability ${item.disponibile ? 'available' : 'unavailable'}">
-                    ${item.disponibile ? 'Disponibile' : 'Non disponibile'}
                 </div>
             </div>
         </div>
@@ -214,142 +200,68 @@ function renderCard(item, index, type) {
 function openModal(index, type, itemName) {
     let items = [];
     
-    // Trova gli items della categoria corrente
+    // Trova gli items della categoria corrente (globale per semplicità)
     if (type === 'beer' && beersData && beersData.beersBySection) {
-        Object.values(beersData.beersBySection).forEach(sectionItems => {
-            items = items.concat(sectionItems);
-        });
+        Object.values(beersData.beersBySection).forEach(sectionItems => { items = items.concat(sectionItems); });
     } else if (type === 'beverage' && beveragesData && beveragesData.beveragesByType) {
-        Object.values(beveragesData.beveragesByType).forEach(typeItems => {
-            items = items.concat(typeItems);
-        });
+        Object.values(beveragesData.beveragesByType).forEach(typeItems => { items = items.concat(typeItems); });
     } else if (type === 'food' && foodData && foodData.foodByCategory) {
-        Object.values(foodData.foodByCategory).forEach(catItems => {
-            items = items.concat(catItems);
-        });
+        Object.values(foodData.foodByCategory).forEach(catItems => { items = items.concat(catItems); });
     }
     
-    // Questo metodo di trovare l'item per indice globale è fragile se filtriamo per categoria
-    // Ma per ora manteniamo la logica esistente, assicurandoci che l'ordine sia consistente
-    // Un approccio migliore sarebbe passare l'oggetto item completo o ID
-    
-    // FIX: Se siamo in detail view, items dovrebbe essere SOLO quelli della categoria
-    // Ma qui stiamo ricostruendo items globali... 
-    // In showCategory, passiamo l'indice relativo alla lista filtrata.
-    // Qui dobbiamo recuperare l'item corretto.
-    
-    // Riprovo a cercare l'item giusto
-    let targetItem = null;
-    
-    // Se siamo in detail view, dovremmo cercare nella categoria attiva
-    // Ma openModal viene chiamato con index relativo alla lista renderizzata
-    // Quindi dobbiamo ricostruire la lista della categoria corrente se possibile
-    // Ma non abbiamo 'categoryName' qui.
-    
-    // TRUCCO: Per ora, cerchiamo l'item per nome (non ideale se duplicati)
-    // O modifichiamo renderCard per passare l'oggetto (non si può in HTML string)
-    
-    // Recuperiamo l'item dalla lista filtrata che abbiamo renderizzato in showCategory
-    // Sfortunatamente 'items' in showCategory è locale.
-    
-    // SOLUZIONE MIGLIORE: Modifichiamo openModal per accettare categoryName se possibile
-    // Ma cambiamo troppo codice.
-    
-    // Cerchiamo l'item in tutti gli item del tipo che hanno quel nome
-    const allItemsOfType = items; // items qui contiene tutti gli item del tipo (appiattiti)
-    // Wait, items construction above is flattened all sections.
-    // renderCard index is relative to the category view!
-    
-    // Se clicco sul primo item della categoria "Hamburger", l'index è 0.
-    // Ma nel mio array flattened, potrebbe essere 50.
-    // Questo codice esistente sembra buggato per le detail view se usa indici relativi.
-    // Vediamo showCategory: items = beveragesData.beveragesByType[categoryName]
-    // renderCard usa index (0, 1, 2...)
-    // openModal riceve (0, 'food', 'Nome')
-    
-    // Quindi openModal DEVE sapere la categoria per risolvere l'indice 0.
-    // Ma la firma è openModal(index, type, itemName).
-    
-    // Cerco l'item per nome e tipo
-    targetItem = allItemsOfType.find(i => i.nome === itemName.replace(/\\'/g, "'"));
-    
-    if (!targetItem) return;
-    const item = targetItem;
+    const item = items.find(i => i.nome === itemName.replace(/\\'/g, "'"));
+    if (!item) return;
     
     const modal = document.getElementById('beer-modal');
     const modalBody = document.getElementById('modal-body');
     
+    // Gestione Tags
     let tags = [];
     if (item.tags) {
-        if (Array.isArray(item.tags)) {
-            tags = item.tags.filter(t => t && t !== 'Nessuno');
-        } else if (typeof item.tags === 'string') {
-            tags = [item.tags].filter(t => t && t !== 'Nessuno');
-        }
+        if (Array.isArray(item.tags)) tags = item.tags.filter(t => t && t !== 'Nessuno');
+        else if (typeof item.tags === 'string') tags = [item.tags].filter(t => t && t !== 'Nessuno');
     }
     
     const tagsHtml = tags.length > 0
-        ? `<div class="beer-tags">
-            ${tags.map(tag => {
-                const tagClass = tag.toLowerCase().replace(/\s+/g, '-');
-                return `<span class="beer-tag ${tagClass}">${tag}</span>`;
-            }).join('')}
+        ? `<div class="modal-tags">
+            ${tags.map(tag => `<span class="tag-pill">${tag}</span>`).join('')}
            </div>`
         : '';
     
+    // Gestione Allergeni
     let allergeni = [];
     if (item.allergeni) {
-        if (Array.isArray(item.allergeni)) {
-            allergeni = item.allergeni.filter(a => a);
-        } else if (typeof item.allergeni === 'string') {
-            allergeni = [item.allergeni].filter(a => a);
-        }
+        if (Array.isArray(item.allergeni)) allergeni = item.allergeni.filter(a => a);
+        else if (typeof item.allergeni === 'string') allergeni = [item.allergeni].filter(a => a);
     }
     
     const allergeniHtml = allergeni.length > 0
-        ? `<div class="modal-section">
-            <div class="modal-section-title">Allergeni</div>
-            <div class="modal-allergens">
-                ${allergeni.map(allergene => 
-                    `<span class="allergen-badge">${allergene}</span>`
-                ).join('')}
-            </div>
+        ? `<div class="modal-tags" style="margin-top:20px; border-top:1px solid #333; padding-top:10px;">
+            <strong style="color:#888; font-size:0.8rem; display:block; margin-bottom:5px;">ALLERGENI:</strong>
+            ${allergeni.map(a => `<span class="tag-pill" style="border-color:#ef4444; color:#ef4444;">${a}</span>`).join('')}
            </div>`
         : '';
     
-    const metaItems = [];
-    if (item.gradazione) {
-        metaItems.push(`<div class="modal-meta-item"><strong>Gradazione:</strong> ${item.gradazione}</div>`);
-    }
-    if (item.formato) {
-        metaItems.push(`<div class="modal-meta-item"><strong>Formato:</strong> ${item.formato}</div>`);
-    }
-    
-    const metaHtml = metaItems.length > 0 
-        ? `<div class="modal-meta">${metaItems.join('')}</div>`
-        : '';
-    
-    const descrizioneCompleta = item.descrizione_dettagliata || item.descrizione || '';
-    const logoHtml = item.logo ? `<img src="${item.logo}" alt="${item.nome}" class="modal-logo">` : '';
+    const imageHtml = item.immagine ? `<img src="${item.immagine}" alt="${item.nome}" class="modal-hero-img">` : '';
     const categoryLabel = item.categoria || item.category || item.tipo || '';
     
     modalBody.innerHTML = `
-        ${item.immagine ? `<img src="${item.immagine}" alt="${item.nome}" class="modal-image">` : ''}
+        ${imageHtml}
         <div class="modal-body">
-            <div class="modal-header">
-                <div class="modal-title-wrapper">
-                    ${logoHtml}
-                    <h2 class="modal-title">${item.nome}</h2>
-                </div>
-                <span class="modal-price">€${item.prezzo}</span>
+            <div class="modal-title-group">
+                <span class="beer-category-badge">${categoryLabel}</span>
+                <h2 class="modal-title">${item.nome}</h2>
+                <div class="modal-price-tag">€${item.prezzo}</div>
             </div>
-            ${categoryLabel ? `<span class="beer-category">${categoryLabel}</span>` : ''}
+            
             ${tagsHtml}
-            ${metaHtml}
-            <div class="modal-description">${descrizioneCompleta}</div>
+            
+            <div class="modal-desc">${item.descrizione_dettagliata || item.descrizione || 'Nessuna descrizione disponibile.'}</div>
+            
             ${allergeniHtml}
-            <div class="availability ${item.disponibile ? 'available' : 'unavailable'}">
-                ${item.disponibile ? '✓ Disponibile' : '✗ Non disponibile'}
+            
+            <div style="margin-top: 20px; text-align:center;">
+                <button onclick="closeModal()" class="btn-icon" style="width:100%; justify-content:center; background:var(--accent); color:black; border:none; font-weight:700;">CHIUDI</button>
             </div>
         </div>
     `;
@@ -387,12 +299,10 @@ function toggleCompactView() {
     
     if (grid.classList.contains('compact-view')) {
         grid.classList.remove('compact-view');
-        toggleBtn.classList.remove('active');
-        toggleText.textContent = 'Vista Compatta';
+        toggleText.textContent = 'Lista';
     } else {
         grid.classList.add('compact-view');
-        toggleBtn.classList.add('active');
-        toggleText.textContent = 'Vista Completa';
+        toggleText.textContent = 'Griglia';
     }
 }
 
