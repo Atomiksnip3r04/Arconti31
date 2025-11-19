@@ -261,17 +261,17 @@
         /* --- WEB NOVIS LINK (Home Specific) --- */
         .webnovis-link {
             display: inline-block;
-            margin-top: 25px; /* Più spazio sopra */
-            font-size: 0.85rem; /* Più grande */
-            font-weight: 600; /* Più grassetto */
-            color: rgba(255, 255, 255, 0.7); /* Più visibile di default */
+            /* margin-top rimossa per desktop per allineamento */
+            font-size: 0.85rem; 
+            font-weight: 600; 
+            color: rgba(255, 255, 255, 0.7); 
             text-transform: uppercase;
             letter-spacing: 2px;
             text-decoration: none;
-            border: 1px solid rgba(212, 175, 55, 0.3); /* Bordo dorato sottile sempre presente */
-            padding: 10px 20px; /* Diventa un vero bottone */
+            border: 1px solid rgba(212, 175, 55, 0.3); 
+            padding: 10px 20px; 
             transition: all 0.3s ease;
-            background: rgba(0, 0, 0, 0.3); /* Leggero sfondo per stacco */
+            background: rgba(0, 0, 0, 0.3); 
         }
 
         .webnovis-link:hover {
@@ -298,11 +298,14 @@
         .footer-links {
             display: flex;
             justify-content: center;
+            align-items: center; /* Assicura allineamento verticale perfetto */
             gap: 3rem;
             margin-bottom: 1rem;
             text-transform: uppercase;
             letter-spacing: 1.5px;
             font-size: 0.85rem;
+            flex-wrap: nowrap; /* Forza tutto su una riga desktop */
+            width: 100%; /* Usa tutta la larghezza */
         }
         
         .footer-links a {
@@ -370,7 +373,7 @@
                 padding-top: 110px; 
                 height: auto; 
                 min-height: auto; /* Altezza naturale */
-                padding-bottom: 60px; /* Padding standard */
+                padding-bottom: 30px; /* Ridotto drasticamente lo spazio sotto il bottone */
             }
 
             .subtitle { font-size: 0.8rem; letter-spacing: 3px; }
@@ -397,9 +400,9 @@
             }
             
             footer {
-                position: relative; /* Footer non più sovrapposto su mobile */
-                background: #050505; /* Sfondo solido per leggibilità */
-                padding: 3rem 1rem;
+                position: relative; 
+                background: #050505; 
+                padding: 1.5rem 1rem; /* Ridotto il padding verticale del footer */
                 margin-top: 0;
             }
         }
