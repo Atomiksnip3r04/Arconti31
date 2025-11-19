@@ -10,6 +10,35 @@ const ICONS = {
         'Biologico': 'bio',
         'default': '🏷️'
     },
+    // Mapping Immagini Categorie
+    categories: {
+        // Food
+        'Hamburger di bufala': 'images/food/hamburger-bufala.jpg',
+        'Hamburger Fassona e Street food': 'images/food/hamburger-fassona.jpg',
+        'OKTOBERFEST': 'images/food/oktoberfest.jpg',
+        'Panini': 'images/food/panini.jpg',
+        'Griglieria': 'images/food/griglieria.jpg',
+        'Piatti Speciali': 'images/food/piatti-speciali.jpg',
+        'Piadine': 'images/food/piadine.jpg',
+        'Fritti': 'images/food/fritti.jpg',
+        'Dolci': 'images/food/dolci.jpg',
+        'Aperitivo': 'images/food/aperitivo.jpg',
+        
+        // Beer Sections
+        'Birre artigianali alla spina a rotazione': 'images/beers/gemini_generated_image_eb6e5jeb6e5jeb6e.png', // Placeholder
+        'Birre alla spina': 'images/beers/ceres-test.png', // Placeholder
+        'Birre speciali in bottiglia': 'images/beers/bottiglia.jpg',
+        'Frigo Birre': 'images/beers/frigo.jpg',
+
+        // Beverage Types
+        'Cocktails': 'images/beverages/gemini_generated_image_2z98hx2z98hx2z98.png', // Placeholder
+        'Analcolici': 'images/beverages/analcolici.jpg',
+        'Bibite': 'images/beverages/bibite.jpg',
+        'Caffetteria': 'images/beverages/caffetteria.jpg',
+        'Bollicine': 'images/beverages/bollicine.jpg',
+        'Bianchi fermi': 'images/beverages/bianchi.jpg',
+        'Vini rossi': 'images/beverages/rossi.jpg'
+    },
     allergeni: {
         'Glutine': '🌾',
         'Lattosio': '🥛',
@@ -132,14 +161,26 @@ function showCategoriesView() {
 }
 
 function createCategoryCard(name, count, icon, type) {
+    // Cerca immagine nel mapping o usa un placeholder generico se non esiste il file specifico
+    // Nota: In un caso reale verificheremmo l'esistenza, qui usiamo il mapping.
+    // Se l'immagine non è definita nel mapping, l'elemento background sarà vuoto (colore di fallback CSS)
+    const imageUrl = ICONS.categories[name]; 
+    const bgStyle = imageUrl ? `background-image: url('${imageUrl}');` : '';
+    const hasImageClass = imageUrl ? 'has-bg-image' : '';
+
     return `
-        <div class="category-card" onclick="showCategory('${name}', '${type}')">
-            <div class="category-icon-wrapper">${icon}</div>
-            <div class="category-info">
-                <div class="category-title">${name}</div>
-                <div class="category-count">${count} prodotti</div>
+        <div class="category-card ${hasImageClass}" onclick="showCategory('${name}', '${type}')">
+            <div class="category-bg-layer" style="${bgStyle}"></div>
+            <div class="category-overlay-layer"></div>
+            
+            <div class="category-content-wrapper">
+                <div class="category-icon-wrapper">${icon}</div>
+                <div class="category-info">
+                    <div class="category-title">${name}</div>
+                    <div class="category-count">${count} prodotti</div>
+                </div>
+                <div class="category-arrow">→</div>
             </div>
-            <div class="category-arrow">→</div>
         </div>
     `;
 }

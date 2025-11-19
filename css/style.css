@@ -119,35 +119,77 @@ header {
 
 .categories-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 15px;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
 }
 
 .category-card {
     background: var(--bg-card);
     border: 1px solid var(--bg-card-border);
-    backdrop-filter: blur(5px);
+    /* backdrop-filter: blur(5px); REMOVED: We handle background image now */
     border-radius: var(--radius-lg);
-    padding: 25px 15px;
+    height: 200px; /* Fixed height for better image display */
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    /* No padding here, content wrapper handles it */
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.category-card:hover {
+    border-color: var(--accent-gold);
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px -10px rgba(212, 175, 55, 0.2);
+}
+
+/* Background Layer with Image */
+.category-bg-layer {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-size: cover;
+    background-position: center;
+    transition: transform 0.6s ease;
+    z-index: 1;
+    /* Default dark bg if no image */
+    background-color: rgba(30,30,30,0.8);
+}
+
+.category-card:hover .category-bg-layer {
+    transform: scale(1.15);
+}
+
+/* Overlay Layer for Contrast */
+.category-overlay-layer {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.85));
+    z-index: 2;
+    transition: background 0.3s ease;
+}
+
+.category-card:hover .category-overlay-layer {
+    background: linear-gradient(to bottom, rgba(0,0,0,0.4), rgba(0,0,0,0.95));
+}
+
+/* Content Wrapper */
+.category-content-wrapper {
+    position: relative;
+    z-index: 3;
+    height: 100%;
+    width: 100%;
+    padding: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-}
-
-.category-card:hover {
-    background: rgba(255,255,255,0.05);
-    border-color: var(--accent-gold);
-    transform: translateY(-5px);
-    box-shadow: 0 15px 30px -10px rgba(212, 175, 55, 0.1);
+    justify-content: center;
 }
 
 .category-icon-wrapper {
-    font-size: 2.5rem;
-    margin-bottom: 15px;
+    font-size: 3rem;
+    margin-bottom: 10px;
     filter: drop-shadow(0 0 10px rgba(0,0,0,0.5));
     transition: transform 0.3s;
 }
@@ -158,24 +200,28 @@ header {
 
 .category-title {
     font-family: var(--font-serif);
-    font-size: 1.1rem;
+    font-size: 1.25rem;
     line-height: 1.3;
     margin-bottom: 5px;
     color: #fff;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.8);
 }
 
 .category-count {
-    font-size: 0.8rem;
-    color: var(--text-secondary);
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.8);
+    font-weight: 500;
 }
 
 .category-arrow {
     margin-top: auto;
-    padding-top: 15px;
+    padding-top: 10px;
     opacity: 0;
     transform: translateY(10px);
     transition: 0.3s;
     color: var(--accent-gold);
+    font-weight: bold;
+    font-size: 1.2rem;
 }
 
 .category-card:hover .category-arrow {
@@ -587,11 +633,6 @@ header {
     color: var(--accent-gold);
     border-color: var(--accent-gold);
 }
-
-/* --- LANDING PAGE FOOTER SPECIFIC --- */
-/* We keep generic footer styling in index.html internal styles if possible, or specific here */
-/* Assuming index.html relies on this file but has its own style block overrides. */
-
 
 /* --- MOBILE --- */
 @media (max-width: 768px) {
