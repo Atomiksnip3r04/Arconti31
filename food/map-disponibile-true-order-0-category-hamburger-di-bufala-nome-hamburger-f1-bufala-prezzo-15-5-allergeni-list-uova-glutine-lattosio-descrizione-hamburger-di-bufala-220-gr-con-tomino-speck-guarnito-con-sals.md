@@ -10,6 +10,6 @@ allergeni:
   - Lattosio
 tags:
   - Novità
-disponibile: false
+disponibile: true
 order: 0
 ---
