@@ -169,7 +169,6 @@ function createCategoryCard(name, count, icon, type) {
             <div class="category-overlay-layer"></div>
             
             <div class="category-content-wrapper">
-                <div class="category-icon-wrapper">${icon}</div>
                 <div class="category-info">
                     <div class="category-title">${name}</div>
                     <div class="category-count">${count} prodotti</div>
