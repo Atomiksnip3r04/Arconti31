@@ -62,10 +62,13 @@ let currentView = 'home';
 // Carica tutte le bevande e il cibo
 async function loadAllBeverages() {
     try {
+        // Fetch con cache: 'no-cache' per assicurare che i dati siano sempre freschi (gestiti da ETag server-side)
+        const fetchOptions = { cache: 'no-cache' };
+        
         const [beersResponse, beveragesResponse, foodResponse] = await Promise.all([
-            fetch('beers/beers.json'),
-            fetch('beverages/beverages.json').catch(() => ({ json: async () => ({ beverages: [], beveragesByType: {} }) })),
-            fetch('food/food.json').catch(() => ({ json: async () => ({ food: [], foodByCategory: {} }) }))
+            fetch('beers/beers.json', fetchOptions),
+            fetch('beverages/beverages.json', fetchOptions).catch(() => ({ json: async () => ({ beverages: [], beveragesByType: {} }) })),
+            fetch('food/food.json', fetchOptions).catch(() => ({ json: async () => ({ food: [], foodByCategory: {} }) }))
         ]);
         
         beersData = await beersResponse.json();
